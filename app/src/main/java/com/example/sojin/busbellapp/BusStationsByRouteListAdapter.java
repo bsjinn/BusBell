@@ -42,11 +42,13 @@ public class BusStationsByRouteListAdapter extends BaseAdapter {
 
         TextView stationNm = (TextView)convertView.findViewById(R.id.stationNm);
         TextView stationEtcInfo = (TextView)convertView.findViewById(R.id.stationEtcInfo);
+        TextView busPos_plainNo = (TextView)convertView.findViewById(R.id.plainNo);
 
         BusStationsByRouteInfoItem item = busStationsByRouteInfoItemList.get(position);
 
         stationNm.setText(item.getStationNm());
         stationEtcInfo.setText(item.getStationNo() + " / " + item.getBeginTm() + "~" + item.getLastTm());
+        busPos_plainNo.setText(item.getBusPos_plainNo());
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -26,8 +27,24 @@ public class BusStationsListActivity extends AppCompatActivity {
         listView = (ListView)findViewById(R.id.listView_bus_station_list);
 
         ArrayList<BusStationsByRouteInfoItem> busStationByRouteList = BusRouteInfo.getStationByRouteList(routeId);
-        BusStationsByRouteListAdapter busStationsByRouteListAdapter = new BusStationsByRouteListAdapter(busStationByRouteList);
+        ArrayList<BusPosInfoItem> busPosByRtidList = BusPos.getBusPosByRtidList(routeId);
 
+        for(int i=0; i < busPosByRtidList.size(); i++){
+            BusPosInfoItem posItem = busPosByRtidList.get(i);
+
+            for(int j=0; j < busStationByRouteList.size(); j++) {
+                BusStationsByRouteInfoItem stnItem = busStationByRouteList.get(j);
+
+                if (posItem.getSectionID().equals(stnItem.getSection())){
+                    stnItem.setBusPos_plainNo(posItem.getPlainNo());
+                    busStationByRouteList.set(j,stnItem);
+                }
+            }
+        }
+
+        BusStationsByRouteListAdapter busStationsByRouteListAdapter = new BusStationsByRouteListAdapter(busStationByRouteList);
         listView.setAdapter(busStationsByRouteListAdapter);
+
+
     }
 }

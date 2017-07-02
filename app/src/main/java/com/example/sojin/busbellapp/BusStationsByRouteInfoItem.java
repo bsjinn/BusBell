@@ -22,6 +22,8 @@ public class BusStationsByRouteInfoItem {
     String sectSpd;         // 구간속도
     String arsId;           // 정류소 고유번호
     String transYn;         // 회차지 여부
+    String busPos_plainNo; // 해당 정류장에 위치하는 버스 정보
+
 
     public String getBusRouteId() {
         return busRouteId;
@@ -181,5 +183,13 @@ public class BusStationsByRouteInfoItem {
 
     public void setTransYn(String transYn) {
         this.transYn = transYn;
+    }
+
+    public String getBusPos_plainNo() {
+        return busPos_plainNo;
+    }
+
+    public void setBusPos_plainNo(String busPos_plainNo) {
+        this.busPos_plainNo = busPos_plainNo;
     }
 }
