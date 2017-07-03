@@ -2,7 +2,6 @@ package com.example.sojin.busbellapp;
 
 import android.os.Build;
 import android.os.StrictMode;
-import android.util.Log;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -14,7 +13,7 @@ import java.util.ArrayList;
 
 public class BusRouteInfo {
     static final String request_Address = "http://ws.bus.go.kr/api/rest/busRouteInfo/";          // 서비스 요청 주소
-    static final String service_Key = "9mKXkSnl71FmnPYq0ibdEOUCCJyNsjKMj0%2BJUHjXHgiRMREQwb0joinQnOn8P8DkBmegCYEBcgMnVy0lZ5RLxA%3D%3D";                                                                // 서비스 키
+    static final String service_Key = "3nvztFALDhnl5ffO0FuwkATq9JDSLJPHjSSVRByOsG78s9vF%2F4SuBbuKcle1XytZB0hkdU19wrBSnqDKHWHpdA%3D%3D";                                                                // 서비스 키
 
     // 노선번호에 해당되는 노선 목록 조회
     // 파라미터 : strRouteInfo (검색할 노선번호)
@@ -114,8 +113,6 @@ public class BusRouteInfo {
             urlBuilder.append("?" + URLEncoder.encode("serviceKey", "UTF-8") + "=" + service_Key);
             urlBuilder.append("&" + URLEncoder.encode("busRouteId", "UTF-8") + "=" + service_Parameter);
 
-            Log.i("ERROR",urlBuilder.toString());
-
             URL url = new URL(urlBuilder.toString());
 
             InputStream in = url.openStream();
@@ -142,7 +139,7 @@ public class BusRouteInfo {
                     if (tagName.equals("busRouteId")) item.setBusRouteId(parser.getText());
                     else if (tagName.equals("busRouteNm")) item.setBusRouteNm(parser.getText());
                     else if (tagName.equals("seq")) item.setSeq(parser.getText());
-                    else if (tagName.equals("section")) item.setRouteType(parser.getText());
+                    else if (tagName.equals("section")) item.setSection(parser.getText());
                     else if (tagName.equals("station")) item.setStation(parser.getText());
                     else if (tagName.equals("stationNm")) item.setStationNm(parser.getText());
                     else if (tagName.equals("gpsX")) item.setGpsX(parser.getText());
