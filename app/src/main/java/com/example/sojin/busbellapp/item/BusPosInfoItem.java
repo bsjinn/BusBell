@@ -1,4 +1,4 @@
-package com.example.sojin.busbellapp;
+package com.example.sojin.busbellapp.item;
 
 /**
  * Created by KSM on 2017-07-02.

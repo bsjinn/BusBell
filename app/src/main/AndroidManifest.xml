@@ -16,8 +16,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BusStationsListActivity"/>
-        <activity android:name=".AlarmAtBusRouteListActicity"/>
+        <activity android:name=".activity.BusStationsListActivity"/>
+        <activity android:name=".activity.AlarmAtBusRouteListActicity"/>
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

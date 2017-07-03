@@ -1,13 +1,23 @@
-package com.example.sojin.busbellapp;
+package com.example.sojin.busbellapp.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.example.sojin.busbellapp.BusPos;
+import com.example.sojin.busbellapp.BusRouteInfo;
+import com.example.sojin.busbellapp.item.BusStationsByRouteInfoItem;
+import com.example.sojin.busbellapp.R;
+import com.example.sojin.busbellapp.adapter.BusStationsByRouteListAdapter;
+import com.example.sojin.busbellapp.item.BusPosInfoItem;
 
 import java.util.ArrayList;
 
@@ -18,6 +28,10 @@ public class BusStationsListActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bus_stations_list_activity_main);
+
+        setCustomActionBar();
+        TextView titleText=(TextView)findViewById(R.id.title_text);
+        titleText.setText(R.string.busRoute_Info);
 
         Intent intent = new Intent(this.getIntent());
         final String routeId = intent.getStringExtra("routeId");
@@ -58,4 +72,27 @@ public class BusStationsListActivity extends AppCompatActivity {
 
 
     }
+
+    private boolean setCustomActionBar(){
+        ActionBar actionBar = getSupportActionBar();
+
+        actionBar.setDisplayShowCustomEnabled(true);//커스텀 액션바 보이게한다
+        //기존 액션바 숨기기
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+
+        //layout inflate
+        LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+        View actionBarView = inflater.inflate(R.layout.activity_actionbar,null);
+
+        actionBar.setCustomView(actionBarView);
+
+        //delete empty space
+        Toolbar parent = (Toolbar)actionBarView.getParent();
+        parent.setContentInsetsAbsolute(0,0);
+
+        return true;
+    }
+
 }

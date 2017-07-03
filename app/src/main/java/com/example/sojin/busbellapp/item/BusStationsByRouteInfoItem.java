@@ -1,4 +1,4 @@
-package com.example.sojin.busbellapp;
+package com.example.sojin.busbellapp.item;
 
 // 한 노선을 지나는 버스정류장을 나타내는 클래스
 public class BusStationsByRouteInfoItem {

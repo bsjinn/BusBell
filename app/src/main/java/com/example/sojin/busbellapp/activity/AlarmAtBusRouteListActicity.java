@@ -1,9 +1,11 @@
-package com.example.sojin.busbellapp;
+package com.example.sojin.busbellapp.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
+
+import com.example.sojin.busbellapp.R;
 
 /**
  * Created by KSM on 2017-07-02.

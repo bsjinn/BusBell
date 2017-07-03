@@ -3,6 +3,8 @@ package com.example.sojin.busbellapp;
 import android.os.Build;
 import android.os.StrictMode;
 
+import com.example.sojin.busbellapp.item.BusPosInfoItem;
+
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 

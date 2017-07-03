@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.StrictMode;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -14,9 +17,8 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import com.example.sojin.busbellapp.BusRouteInfo;
-import com.example.sojin.busbellapp.BusRouteInfoItem;
-import com.example.sojin.busbellapp.BusRouteListAdapter;
-import com.example.sojin.busbellapp.BusStationsListActivity;
+import com.example.sojin.busbellapp.item.BusRouteInfoItem;
+import com.example.sojin.busbellapp.adapter.BusRouteListAdapter;
 import com.example.sojin.busbellapp.R;
 
 public class MainActivity extends AppCompatActivity {
@@ -28,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        setCustomActionBar();
 
         editText = (EditText)findViewById(R.id.editText);
         okButton = (Button)findViewById(R.id.okButton);
@@ -59,5 +63,27 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    private boolean setCustomActionBar(){
+        ActionBar actionBar = getSupportActionBar();
+
+        actionBar.setDisplayShowCustomEnabled(true);//커스텀 액션바 보이게한다
+        //기존 액션바 숨기기
+        actionBar.setDisplayHomeAsUpEnabled(false);
+        actionBar.setDisplayShowTitleEnabled(false);
+        actionBar.setDisplayShowHomeEnabled(false);
+
+        //layout inflate
+        LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
+        View actionBarView = inflater.inflate(R.layout.activity_actionbar,null);
+
+        actionBar.setCustomView(actionBarView);
+
+        //delete empty space
+        Toolbar parent = (Toolbar)actionBarView.getParent();
+        parent.setContentInsetsAbsolute(0,0);
+
+        return true;
     }
 }

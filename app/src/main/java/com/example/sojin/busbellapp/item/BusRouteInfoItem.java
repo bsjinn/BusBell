@@ -1,4 +1,4 @@
-package com.example.sojin.busbellapp;
+package com.example.sojin.busbellapp.item;
 
 // 노선 번호로 검색 된 버스 경로를 나타내는 클래스
 public class BusRouteInfoItem {
