@@ -12,12 +12,12 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.sojin.busbellapp.BusPos;
+import com.example.sojin.busbellapp.BusPosInfo;
 import com.example.sojin.busbellapp.BusRouteInfo;
-import com.example.sojin.busbellapp.item.BusStationsByRouteInfoItem;
 import com.example.sojin.busbellapp.R;
 import com.example.sojin.busbellapp.adapter.BusStationsByRouteListAdapter;
 import com.example.sojin.busbellapp.item.BusPosInfoItem;
+import com.example.sojin.busbellapp.item.BusStationsByRouteInfoItem;
 
 import java.util.ArrayList;
 
@@ -40,18 +40,9 @@ public class BusStationsListActivity extends AppCompatActivity {
         txt.setText(routeId.toString());
 
         listView = (ListView)findViewById(R.id.listView_bus_station_list);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(BusStationsListActivity.this, AlarmAtBusRouteListActicity.class);
-                intent.putExtra("routeId", routeId);
-
-                startActivity(intent);
-            }
-        });
 
         ArrayList<BusStationsByRouteInfoItem> busStationByRouteList = BusRouteInfo.getStationByRouteList(routeId);
-        ArrayList<BusPosInfoItem> busPosByRtidList = BusPos.getBusPosByRtidList(routeId);
+        ArrayList<BusPosInfoItem> busPosByRtidList = BusPosInfo.getBusPosByRtidList(routeId);
 
         for(int i=0; i < busPosByRtidList.size(); i++){
             BusPosInfoItem posItem = busPosByRtidList.get(i);
@@ -66,11 +57,23 @@ public class BusStationsListActivity extends AppCompatActivity {
             }
         }
 
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                BusStationsByRouteInfoItem item = (BusStationsByRouteInfoItem) parent.getItemAtPosition(position);
+
+                Intent intent = new Intent(BusStationsListActivity.this, AlarmAtBusRouteListActicity.class);
+
+                intent.putExtra("stId", item.getStation());
+                intent.putExtra("routeId", item.getBusRouteId());
+                intent.putExtra("ord", item.getSeq());
+
+                startActivity(intent);
+            }
+        });
+
         BusStationsByRouteListAdapter busStationsByRouteListAdapter = new BusStationsByRouteListAdapter(busStationByRouteList);
         listView.setAdapter(busStationsByRouteListAdapter);
-
-
-
     }
 
     private boolean setCustomActionBar(){
