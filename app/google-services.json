@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "648478028249",
+    "firebase_url": "https://busbell-c4982.firebaseio.com",
+    "project_id": "busbell-c4982",
+    "storage_bucket": "busbell-c4982.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:648478028249:android:2b3f07b6bdd813af",
+        "android_client_info": {
+          "package_name": "com.example.sojin.busbellapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "648478028249-qh6gkngbiud58evpna03r4t8n4lpoe5q.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCg8jjm7fgcBmSDyBIrKcusD5Qm5iRVjIU"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
