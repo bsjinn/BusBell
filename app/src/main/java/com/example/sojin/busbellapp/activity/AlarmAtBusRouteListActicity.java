@@ -18,6 +18,7 @@ import com.example.sojin.busbellapp.BusRouteInfo;
 import com.example.sojin.busbellapp.R;
 import com.example.sojin.busbellapp.adapter.BusStationsByRouteListAdapter;
 import com.example.sojin.busbellapp.item.BusStationsByRouteInfoItem;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -66,7 +67,8 @@ public class AlarmAtBusRouteListActicity extends AppCompatActivity {
                 TelephonyManager tm =(TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
                 BusArrInfoItem item = (BusArrInfoItem)arrival_listview.getItemAtPosition(position);
 
-                deviceID = tm.getDeviceId();
+                deviceID= FirebaseInstanceId.getInstance().getToken();
+                //deviceID = tm.getDeviceId();
                 busID = item.getVehId();
 
                 isArrivalChecked = true;

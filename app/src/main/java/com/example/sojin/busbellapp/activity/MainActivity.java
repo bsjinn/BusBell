@@ -7,6 +7,7 @@ import android.os.StrictMode;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -21,6 +22,9 @@ import com.example.sojin.busbellapp.item.BusRouteInfoItem;
 import com.example.sojin.busbellapp.adapter.BusRouteListAdapter;
 import com.example.sojin.busbellapp.R;
 
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 public class MainActivity extends AppCompatActivity {
     EditText editText;
     Button okButton;
@@ -31,7 +35,13 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //actionbar
         setCustomActionBar();
+        //fcm
+        FirebaseMessaging.getInstance().subscribeToTopic("news");
+        //String deviceToken=FirebaseInstanceId.getInstance().getToken();
+        //Log.d("","token:"+deviceToken);
+
 
         editText = (EditText)findViewById(R.id.editText);
         okButton = (Button)findViewById(R.id.okButton);
