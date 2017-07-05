@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.sojin.busbellapp.item.BusStationsByRouteInfoItem;
@@ -46,6 +47,7 @@ public class BusStationsByRouteListAdapter extends BaseAdapter {
         TextView stationNm = (TextView)convertView.findViewById(R.id.stationNm);
         TextView stationEtcInfo = (TextView)convertView.findViewById(R.id.stationEtcInfo);
         TextView busPos_plainNo = (TextView)convertView.findViewById(R.id.plainNo);
+        ImageView busStopIm = (ImageView)convertView.findViewById(R.id.busIm);
 
         stationNm.setFocusable(false);
         stationEtcInfo.setFocusable(false);
@@ -56,6 +58,9 @@ public class BusStationsByRouteListAdapter extends BaseAdapter {
         stationNm.setText(item.getStationNm());
         stationEtcInfo.setText(item.getStationNo() + " / " + item.getBeginTm() + "~" + item.getLastTm());
         busPos_plainNo.setText(item.getBusPos_plainNo());
+
+        if(!busPos_plainNo.getText().equals(""))
+            busStopIm.setImageResource(R.drawable.busim);
 
         return convertView;
     }
