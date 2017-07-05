@@ -1,9 +1,11 @@
 package com.example.sojin.busbellapp.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.view.View;
@@ -12,14 +14,17 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.sojin.busbellapp.BusArrInfo;
-import com.example.sojin.busbellapp.item.BusArrInfoItem;
-import com.example.sojin.busbellapp.adapter.BusArrInfoListAdapter;
 import com.example.sojin.busbellapp.BusRouteInfo;
 import com.example.sojin.busbellapp.R;
+import com.example.sojin.busbellapp.adapter.BusArrInfoListAdapter;
 import com.example.sojin.busbellapp.adapter.BusStationsByRouteListAdapter;
+import com.example.sojin.busbellapp.item.BusArrInfoItem;
 import com.example.sojin.busbellapp.item.BusStationsByRouteInfoItem;
 import com.google.firebase.crash.FirebaseCrash;
 import com.google.firebase.iid.FirebaseInstanceId;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -98,12 +103,8 @@ public class AlarmAtBusRouteListActicity extends AppCompatActivity {
 
                 isGetoffChecked = true;
 
-                if(isArrivalChecked == true && isGetoffChecked == true){
+                if(isArrivalChecked == true && isGetoffChecked == true)
                     sendInfoToServer(deviceID, busID, preStnID);
-                    Toast.makeText(getApplicationContext(), "SUCCESS", Toast.LENGTH_LONG);
-
-                    isArrivalChecked = false; isGetoffChecked = false;
-                }
             }
         });
         getoff_listview.setAdapter(busStationsByRouteListAdapter);
@@ -147,10 +148,37 @@ public class AlarmAtBusRouteListActicity extends AppCompatActivity {
                     reader.close();
                     conn.disconnect();
                 }
+
+                JSONObject jsonObject = new JSONObject(sb.toString());
+                String result_status = jsonObject.get("result").toString();
+                String result_msg = null;
+
+                if(result_status.equals("true"))
+                    result_msg = "성공하였습니다.";
+                else
+                    result_msg = "실패하였습니다.";
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("결과 확인")
+                        .setMessage(result_msg)
+                        .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                finish();
+                            }
+                        });
+                AlertDialog dialog = builder.create();
+                dialog.show();
+
+                isArrivalChecked = false; isGetoffChecked = false;
+
+                return  result_msg;
             }
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
             e.printStackTrace();
         }
 
