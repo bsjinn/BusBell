@@ -7,26 +7,26 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import com.example.sojin.busbellapp.item.BusStationsByRouteInfoItem;
 import com.example.sojin.busbellapp.R;
+import com.example.sojin.busbellapp.item.BusStationInfoItem;
 
 import java.util.ArrayList;
 
 public class BusStationsByRouteListAdapter extends BaseAdapter {
-    private ArrayList<BusStationsByRouteInfoItem> busStationsByRouteInfoItemList;
+    private ArrayList<BusStationInfoItem> busStationInfoItemList;
 
-    public BusStationsByRouteListAdapter(ArrayList<BusStationsByRouteInfoItem> busStationsByRouteInfoItemList) {
-        this.busStationsByRouteInfoItemList = busStationsByRouteInfoItemList;
+    public BusStationsByRouteListAdapter(ArrayList<BusStationInfoItem> busStationInfoItemList) {
+        this.busStationInfoItemList = busStationInfoItemList;
     }
 
     @Override
     public int getCount() {
-        return busStationsByRouteInfoItemList.size();
+        return busStationInfoItemList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return busStationsByRouteInfoItemList.get(position);
+        return busStationInfoItemList.get(position);
     }
 
     @Override
@@ -51,7 +51,7 @@ public class BusStationsByRouteListAdapter extends BaseAdapter {
         stationEtcInfo.setFocusable(false);
         busPos_plainNo.setFocusable(false);
 
-        BusStationsByRouteInfoItem item = busStationsByRouteInfoItemList.get(position);
+        BusStationInfoItem item = busStationInfoItemList.get(position);
 
         stationNm.setText(item.getStationNm());
         stationEtcInfo.setText(item.getStationNo() + " / " + item.getBeginTm() + "~" + item.getLastTm());

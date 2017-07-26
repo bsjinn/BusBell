@@ -19,7 +19,7 @@ import com.example.sojin.busbellapp.R;
 import com.example.sojin.busbellapp.adapter.BusArrInfoListAdapter;
 import com.example.sojin.busbellapp.adapter.BusStationsByRouteListAdapter;
 import com.example.sojin.busbellapp.item.BusArrInfoItem;
-import com.example.sojin.busbellapp.item.BusStationsByRouteInfoItem;
+import com.example.sojin.busbellapp.item.BusStationInfoItem;
 import com.google.firebase.iid.FirebaseInstanceId;
 
 import org.json.JSONException;
@@ -89,14 +89,14 @@ public class AlarmAtBusRouteListActicity extends AppCompatActivity {
 
         arrival_listview.setAdapter(busArrInfoListAdapter);
 
-        ArrayList<BusStationsByRouteInfoItem> busStationsByRouteInfoList = BusRouteInfo.getStationByRouteList(routeId);
+        ArrayList<BusStationInfoItem> busStationsByRouteInfoList = BusRouteInfo.getStationByRouteList(routeId);
         BusStationsByRouteListAdapter busStationsByRouteListAdapter = new BusStationsByRouteListAdapter(busStationsByRouteInfoList);
 
         getoff_listview = (ListView)findViewById(R.id.listView_station_getoff_list);
         getoff_listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                BusStationsByRouteInfoItem item = (BusStationsByRouteInfoItem)getoff_listview.getItemAtPosition(position-1);
+                BusStationInfoItem item = (BusStationInfoItem)getoff_listview.getItemAtPosition(position-1);
 
                 preStnID = item.getStation();
 

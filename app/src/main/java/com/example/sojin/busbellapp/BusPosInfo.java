@@ -60,7 +60,7 @@ public class BusPosInfo {
                         item = new BusPosInfoItem();
                     }
                 } else if (eventType == XmlPullParser.TEXT && isItemTag) {
-                    if (tagName.equals("sectionId")) item.setSectionID(parser.getText());
+                    if (tagName.equals("sectionId")) item.setSectionId(parser.getText());
                     else if (tagName.equals("plainNo")) item.setPlainNo(parser.getText());
                 } else if (eventType == XmlPullParser.END_TAG) {
                     tagName = parser.getName();

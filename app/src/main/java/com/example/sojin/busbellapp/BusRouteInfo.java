@@ -4,7 +4,7 @@ import android.os.Build;
 import android.os.StrictMode;
 
 import com.example.sojin.busbellapp.item.BusRouteInfoItem;
-import com.example.sojin.busbellapp.item.BusStationsByRouteInfoItem;
+import com.example.sojin.busbellapp.item.BusStationInfoItem;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
@@ -100,11 +100,11 @@ public class BusRouteInfo {
     // 노선별 경유 정류소 조회 서비스
     // 파라미터 : busRouteId (검색할 노선 ID)
     // 리턴값 : busStationByRouteInfoList (검색된 노선의 정류장을 담은 ArrayList)
-    public static ArrayList<BusStationsByRouteInfoItem> getStationByRouteList(String busRouteId) {
+    public static ArrayList<BusStationInfoItem> getStationByRouteList(String busRouteId) {
         String service_Name = "getStaionByRoute";
         String service_Parameter = busRouteId;
 
-        ArrayList<BusStationsByRouteInfoItem> busStationByRouteInfoList = new ArrayList<BusStationsByRouteInfoItem>();
+        ArrayList<BusStationInfoItem> busStationByRouteInfoList = new ArrayList<BusStationInfoItem>();
 
         if (Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -129,14 +129,14 @@ public class BusRouteInfo {
             boolean isItemTag = false;
 
             String tagName = null;
-            BusStationsByRouteInfoItem item = null;
+            BusStationInfoItem item = null;
 
             while (eventType != XmlPullParser.END_DOCUMENT) {
                 if (eventType == XmlPullParser.START_TAG) {
                     tagName = parser.getName();
                     if (tagName.equals("itemList")) {
                         isItemTag = true;
-                        item = new BusStationsByRouteInfoItem();
+                        item = new BusStationInfoItem();
                     }
                 } else if (eventType == XmlPullParser.TEXT && isItemTag) {
                     if (tagName.equals("busRouteId")) item.setBusRouteId(parser.getText());

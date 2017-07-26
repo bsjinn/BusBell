@@ -1,13 +1,10 @@
 package com.example.sojin.busbellapp.activity;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.os.StrictMode;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
@@ -15,15 +12,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.example.sojin.busbellapp.BusApiService;
+import com.example.sojin.busbellapp.R;
+import com.example.sojin.busbellapp.adapter.BusRouteListAdapter;
+import com.example.sojin.busbellapp.item.BusRouteInfoItem;
+import com.example.sojin.busbellapp.item.BusRouteInfoWrapper;
+import com.google.firebase.messaging.FirebaseMessaging;
+
 import java.util.ArrayList;
 
-import com.example.sojin.busbellapp.BusRouteInfo;
-import com.example.sojin.busbellapp.item.BusRouteInfoItem;
-import com.example.sojin.busbellapp.adapter.BusRouteListAdapter;
-import com.example.sojin.busbellapp.R;
-
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.messaging.FirebaseMessaging;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     EditText editText;
@@ -47,18 +47,31 @@ public class MainActivity extends AppCompatActivity {
         okButton = (Button)findViewById(R.id.okButton);
         listView = (ListView)findViewById(R.id.listView);
 
-        if(Build.VERSION.SDK_INT > 9){
-            StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
-            StrictMode.setThreadPolicy(policy);
-        }
-
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                ArrayList busRouteList =  BusRouteInfo.getBusRouteList(editText.getText().toString());
-                BusRouteListAdapter busRouteListAdapter = new BusRouteListAdapter(busRouteList);
+                String bus_number = editText.getText().toString();
+                String API_KEY = "3nvztFALDhnl5ffO0FuwkATq9JDSLJPHjSSVRByOsG78s9vF%2F4SuBbuKcle1XytZB0hkdU19wrBSnqDKHWHpdA%3D%3D";
 
-                listView.setAdapter(busRouteListAdapter);
+                BusApiService service = BusApiService.retrofit.create(BusApiService.class);
+                Call<BusRouteInfoWrapper> call = service.getBusRouteList(bus_number, API_KEY);
+                call.enqueue(new Callback<BusRouteInfoWrapper>() {
+                    @Override
+                    public void onResponse(Call<BusRouteInfoWrapper> call, Response<BusRouteInfoWrapper> response) {
+                        if(response.isSuccessful()){
+                            BusRouteInfoWrapper result = response.body();
+                            ArrayList<BusRouteInfoItem> list = result.getBusRouteList();
+
+                            BusRouteListAdapter busRouteListAdapter = new BusRouteListAdapter(list);
+                            listView.setAdapter(busRouteListAdapter);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<BusRouteInfoWrapper> call, Throwable t) {
+
+                    }
+                });
             }
         });
 
