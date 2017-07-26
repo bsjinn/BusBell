@@ -3,4 +3,12 @@
 
     <string name="smartBusAlarm">Smart Bus Bell</string>
     <string name="busRoute_Info">실시간 노선 정보</string>
+    <string name="title_activity_test">TestActivity</string>
+    <string name="title_favorite">Favorite</string>
+    <string name="title_search">Search</string>
+
+    <string name="api_key">3nvztFALDhnl5ffO0FuwkATq9JDSLJPHjSSVRByOsG78s9vF%2F4SuBbuKcle1XytZB0hkdU19wrBSnqDKHWHpdA%3D%3D</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
