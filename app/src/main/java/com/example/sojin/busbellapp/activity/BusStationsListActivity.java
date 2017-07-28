@@ -3,17 +3,17 @@ package com.example.sojin.busbellapp.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.sojin.busbellapp.BusApiService;
 import com.example.sojin.busbellapp.R;
+import com.example.sojin.busbellapp.adapter.BusStationsByRouteListAdapter;
 import com.example.sojin.busbellapp.item.BusPosInfoItem;
 import com.example.sojin.busbellapp.item.BusPosInfoWrapper;
 import com.example.sojin.busbellapp.item.BusStationInfoItem;
@@ -26,42 +26,75 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class BusStationsListActivity extends AppCompatActivity {
-    ListView listView;
+    private ListView listView;
+    private Button button;
+    private TextView on_info;
+    private TextView off_info;
 
-    ArrayList<BusPosInfoItem> busPos_ArrayList;
-    ArrayList<BusStationInfoItem> busStation_ArrayList;
+    private ArrayList<BusPosInfoItem> busPos_ArrayList;
+    private ArrayList<BusStationInfoItem> busStation_ArrayList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bus_stations_list_activity_main);
 
-        setCustomActionBar();
-        TextView titleText=(TextView)findViewById(R.id.title_text);
-        titleText.setText(R.string.busRoute_Info);
-
         Intent intent = new Intent(this.getIntent());
-        String routeId = intent.getStringExtra("routeId");
-        String API_KEY = "3nvztFALDhnl5ffO0FuwkATq9JDSLJPHjSSVRByOsG78s9vF%2F4SuBbuKcle1XytZB0hkdU19wrBSnqDKHWHpdA%3D%3D";
-
-
-        TextView txt = (TextView)findViewById(R.id.txt);
-        txt.setText(routeId.toString());
+        String ROUTE_ID = intent.getStringExtra("routeId");
+        String API_KEY = getString(R.string.api_key);
 
         listView = (ListView)findViewById(R.id.listView_bus_station_list);
+        on_info = (TextView)findViewById(R.id.bus_station_list_on_info);
+        off_info = (TextView)findViewById(R.id.bus_station_list_off_info);
+        button = (Button)findViewById(R.id.bus_station_list_button);
 
         BusApiService station_service = BusApiService.retrofit.create(BusApiService.class);
-        Call<BusStationInfoWrapper> station_call = station_service.getBusStationByRoute(routeId, API_KEY);
+        final Call<BusStationInfoWrapper> station_call = station_service.getBusStationByRoute(ROUTE_ID, API_KEY);
         station_call.enqueue(new Callback<BusStationInfoWrapper>() {
             @Override
             public void onResponse(Call<BusStationInfoWrapper> call, Response<BusStationInfoWrapper> response) {
-                if(response.isSuccessful()){
+                if (response.isSuccessful()) {
                     BusStationInfoWrapper result = response.body();
                     busStation_ArrayList = result.getBusStationList();
-                }else{
 
+                    /* Wait for the result while getting BUS POSITION ARRAY */
+                    if (busPos_ArrayList == null) {
+                        try {
+                            this.wait();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    /* Set bus plate number to station if there is bus near a station. */
+                    for (int i = 0; i < busPos_ArrayList.size(); i++) {
+                        BusPosInfoItem posItem = busPos_ArrayList.get(i);
+
+                        for (int j = 0; j < busStation_ArrayList.size(); j++) {
+                            BusStationInfoItem stnItem = busStation_ArrayList.get(j);
+
+                            if (posItem.getSectionId().equals(stnItem.getSection())) {
+                                stnItem.setBusPos_plainNo(posItem.getPlainNo());
+                                busStation_ArrayList.set(j, stnItem);
+                            }
+                        }
+                    }
+
+                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                            String station_name = busStation_ArrayList.get(i).getStationNm();
+
+                            if(on_info.getText().length() > 0)
+                                off_info.setText(station_name);
+                            else
+                                on_info.setText(station_name);
+                        }
+                    });
+
+                    BusStationsByRouteListAdapter busStationsByRouteListAdapter = new BusStationsByRouteListAdapter(busStation_ArrayList);
+                    listView.setAdapter(busStationsByRouteListAdapter);
                 }
-
             }
 
             @Override
@@ -70,13 +103,15 @@ public class BusStationsListActivity extends AppCompatActivity {
             }
         });
 
-        Call<BusPosInfoWrapper> pos_call = station_service.getBusPosByRtid(routeId, API_KEY);
+        Call<BusPosInfoWrapper> pos_call = station_service.getBusPosByRtid(ROUTE_ID, API_KEY);
         pos_call.enqueue(new Callback<BusPosInfoWrapper>() {
             @Override
             public void onResponse(Call<BusPosInfoWrapper> call, Response<BusPosInfoWrapper> response) {
                 if(response.isSuccessful()){
                     BusPosInfoWrapper result = response.body();
                     busPos_ArrayList = result.getBusPosList();
+
+                    // TODO: Check if Station-Thread is waited
                 }else{
 
                 }
@@ -88,60 +123,25 @@ public class BusStationsListActivity extends AppCompatActivity {
             }
         });
 
+        on_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                on_info.setText("");
+            }
+        });
+        off_info.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                off_info.setText("");
+            }
+        });
 
-        Log.e("!@#!@#!@#",busStation_ArrayList.size() + ":" + busStation_ArrayList);
-//        for(int i=0; i < busPos_ArrayList.size(); i++){
-//            BusPosInfoItem posItem = busPos_ArrayList.get(i);
-//
-//            for(int j=0; j < busStation_ArrayList.size(); j++) {
-//                BusStationInfoItem stnItem = busStation_ArrayList.get(j);
-//
-//                if (posItem.getSectionId().equals(stnItem.getSection())){
-//                    stnItem.setBusPos_plainNo(posItem.getPlainNo());
-//                    busStation_ArrayList.set(j,stnItem);
-//                }
-//            }
-//        }
-//
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                BusStationInfoItem item = (BusStationInfoItem) parent.getItemAtPosition(position);
-//
-//                Intent intent = new Intent(BusStationsListActivity.this, AlarmAtBusRouteListActicity.class);
-//
-//                intent.putExtra("stId", item.getStation());
-//                intent.putExtra("routeId", item.getBusRouteId());
-//                intent.putExtra("ord", item.getSeq());
-//
-//                startActivity(intent);
-//            }
-//        });
-//
-//        BusStationsByRouteListAdapter busStationsByRouteListAdapter = new BusStationsByRouteListAdapter(busStation_ArrayList);
-//        listView.setAdapter(busStationsByRouteListAdapter);
+        //TODO: Impletment onClickListner -> Make a POST REQUEST with arrving info
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),"Making a Reservation is successed!",Toast.LENGTH_LONG).show();
+            }
+        });
     }
-
-    private boolean setCustomActionBar(){
-        ActionBar actionBar = getSupportActionBar();
-
-        actionBar.setDisplayShowCustomEnabled(true);//커스텀 액션바 보이게한다
-        //기존 액션바 숨기기
-        actionBar.setDisplayHomeAsUpEnabled(false);
-        actionBar.setDisplayShowTitleEnabled(false);
-        actionBar.setDisplayShowHomeEnabled(false);
-
-        //layout inflate
-        LayoutInflater inflater = (LayoutInflater)getSystemService(LAYOUT_INFLATER_SERVICE);
-        View actionBarView = inflater.inflate(R.layout.activity_actionbar,null);
-
-        actionBar.setCustomView(actionBarView);
-
-        //delete empty space
-        Toolbar parent = (Toolbar)actionBarView.getParent();
-        parent.setContentInsetsAbsolute(0,0);
-
-        return true;
-    }
-
 }

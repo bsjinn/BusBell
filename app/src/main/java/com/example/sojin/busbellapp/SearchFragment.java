@@ -1,108 +1,82 @@
 package com.example.sojin.busbellapp;
 
-import android.content.Context;
-import android.net.Uri;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ListView;
 
+import com.example.sojin.busbellapp.activity.BusStationsListActivity;
+import com.example.sojin.busbellapp.adapter.BusRouteListAdapter;
+import com.example.sojin.busbellapp.item.BusRouteInfoItem;
+import com.example.sojin.busbellapp.item.BusRouteInfoWrapper;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link SearchFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link SearchFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class SearchFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private EditText editText;
+    private Button okButton;
+    private ListView listView;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    //private OnFragmentInteractionListener mListener;
-
-    public SearchFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment SearchFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static SearchFragment newInstance(String param1, String param2) {
-        SearchFragment fragment = new SearchFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
+    //TODO : Hide a keyboard when input is finished and button is clicked
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_search, container, false);
-    }
+        View view = inflater.inflate(R.layout.fragment_search, container, false);
 
-    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
-//
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
-//
-//    /**
-//     * This interface must be implemented by activities that contain this
-//     * fragment to allow an interaction in this fragment to be communicated
-//     * to the activity and potentially other fragments contained in that
-//     * activity.
-//     * <p>
-//     * See the Android Training lesson <a href=
-//     * "http://developer.android.com/training/basics/fragments/communicating.html"
-//     * >Communicating with Other Fragments</a> for more information.
-//     */
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        void onFragmentInteraction(Uri uri);
-//    }
+        editText = (EditText) view.findViewById(R.id.fragment_search_edittext);
+        okButton = (Button) view.findViewById(R.id.fragment_search_button);
+        listView = (ListView) view.findViewById(R.id.fragment_search_listview);
+
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String BUS_NUM = editText.getText().toString();
+                String API_KEY = getString(R.string.api_key);
+
+                BusApiService service = BusApiService.retrofit.create(BusApiService.class);
+                Call<BusRouteInfoWrapper> call = service.getBusRouteList(BUS_NUM, API_KEY);
+                call.enqueue(new Callback<BusRouteInfoWrapper>() {
+                    @Override
+                    public void onResponse(Call<BusRouteInfoWrapper> call, Response<BusRouteInfoWrapper> response) {
+                        if (response.isSuccessful()) {
+                            BusRouteInfoWrapper result = response.body();
+                            ArrayList<BusRouteInfoItem> list = result.getBusRouteList();
+
+                            BusRouteListAdapter busRouteListAdapter = new BusRouteListAdapter(list);
+                            listView.setAdapter(busRouteListAdapter);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<BusRouteInfoWrapper> call, Throwable t) {
+
+                    }
+                });
+            }
+        });
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                BusRouteInfoItem item = (BusRouteInfoItem) parent.getItemAtPosition(position);
+
+                Intent intent = new Intent(getActivity(), BusStationsListActivity.class);
+                intent.putExtra("routeId", item.getBusRouteId());
+
+                startActivity(intent);
+            }
+        });
+
+        return view;
+    }
 }

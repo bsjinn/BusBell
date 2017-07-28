@@ -6,7 +6,6 @@ import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.EditText;
@@ -43,11 +42,9 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()){
                     case R.id.navigation_favorite:
                         fragment = new FavoriteFragment();
-                        Log.i("Selected : ","FAVORITE");
                         break;
                     case R.id.navigation_search:
                         fragment = new SearchFragment();
-                        Log.i("Selected : ", "SEARCH");
                         break;
                 }
 
@@ -58,51 +55,6 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             }
         });
-
-
-//        editText = (EditText)findViewById(R.id.activity_main_edittext);
-//        okButton = (Button)findViewById(R.id.activity_main_ok_button);
-//        listView = (ListView)findViewById(R.id.activity_main_listview);
-//
-//        okButton.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                String bus_number = editText.getText().toString();
-//                String API_KEY = "3nvztFALDhnl5ffO0FuwkATq9JDSLJPHjSSVRByOsG78s9vF%2F4SuBbuKcle1XytZB0hkdU19wrBSnqDKHWHpdA%3D%3D";
-//
-//                BusApiService service = BusApiService.retrofit.create(BusApiService.class);
-//                Call<BusRouteInfoWrapper> call = service.getBusRouteList(bus_number, API_KEY);
-//                call.enqueue(new Callback<BusRouteInfoWrapper>() {
-//                    @Override
-//                    public void onResponse(Call<BusRouteInfoWrapper> call, Response<BusRouteInfoWrapper> response) {
-//                        if(response.isSuccessful()){
-//                            BusRouteInfoWrapper result = response.body();
-//                            ArrayList<BusRouteInfoItem> list = result.getBusRouteList();
-//
-//                            BusRouteListAdapter busRouteListAdapter = new BusRouteListAdapter(list);
-//                            listView.setAdapter(busRouteListAdapter);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<BusRouteInfoWrapper> call, Throwable t) {
-//
-//                    }
-//                });
-//            }
-//        });
-//
-//        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                BusRouteInfoItem item = (BusRouteInfoItem) parent.getItemAtPosition(position);
-//
-//                Intent intent = new Intent(MainActivity.this, BusStationsListActivity.class);
-//                intent.putExtra("routeId",item.getBusRouteId());
-//
-//                startActivity(intent);
-//            }
-//        });
     }
 
 //    private boolean setCustomActionBar(){

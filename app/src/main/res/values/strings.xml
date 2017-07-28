@@ -1,9 +1,7 @@
 <resources>
-    <string name="app_name">BusBellApp</string>
+    <string name="app_name">여기역이요</string>
 
     <string name="smartBusAlarm">Smart Bus Bell</string>
-    <string name="busRoute_Info">실시간 노선 정보</string>
-    <string name="title_activity_test">TestActivity</string>
     <string name="title_favorite">Favorite</string>
     <string name="title_search">Search</string>
 
