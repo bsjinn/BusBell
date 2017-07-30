@@ -4,10 +4,16 @@
     android:layout_height="match_parent"
     tools:context="com.example.sojin.busbellapp.FavoriteFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <ListView
+        android:id="@+id/fragment_favorite_listview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="Favorite" />
+        android:layout_height="wrap_content"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fragment_favorite_fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_gravity="bottom|right"/>
 
 </FrameLayout>

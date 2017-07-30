@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.example.sojin.busbellapp.BusApiService;
 import com.example.sojin.busbellapp.R;
 import com.example.sojin.busbellapp.adapter.BusStationsByRouteListAdapter;
+import com.example.sojin.busbellapp.item.BusArrInfoWrapper;
 import com.example.sojin.busbellapp.item.BusPosInfoItem;
 import com.example.sojin.busbellapp.item.BusPosInfoWrapper;
 import com.example.sojin.busbellapp.item.BusStationInfoItem;
@@ -28,8 +29,10 @@ import retrofit2.Response;
 public class BusStationsListActivity extends AppCompatActivity {
     private ListView listView;
     private Button button;
+
     private TextView on_info;
     private TextView off_info;
+    private TextView arr_bus_info;
 
     private ArrayList<BusPosInfoItem> busPos_ArrayList;
     private ArrayList<BusStationInfoItem> busStation_ArrayList;
@@ -41,15 +44,16 @@ public class BusStationsListActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this.getIntent());
         String ROUTE_ID = intent.getStringExtra("routeId");
-        String API_KEY = getString(R.string.api_key);
+        final String API_KEY = getString(R.string.api_key);
 
         listView = (ListView)findViewById(R.id.listView_bus_station_list);
         on_info = (TextView)findViewById(R.id.bus_station_list_on_info);
         off_info = (TextView)findViewById(R.id.bus_station_list_off_info);
+        arr_bus_info = (TextView)findViewById(R.id.bus_station_list_arr_bus_info);
         button = (Button)findViewById(R.id.bus_station_list_button);
 
         BusApiService station_service = BusApiService.retrofit.create(BusApiService.class);
-        final Call<BusStationInfoWrapper> station_call = station_service.getBusStationByRoute(ROUTE_ID, API_KEY);
+        Call<BusStationInfoWrapper> station_call = station_service.getBusStationByRoute(ROUTE_ID, API_KEY);
         station_call.enqueue(new Callback<BusStationInfoWrapper>() {
             @Override
             public void onResponse(Call<BusStationInfoWrapper> call, Response<BusStationInfoWrapper> response) {
@@ -59,11 +63,11 @@ public class BusStationsListActivity extends AppCompatActivity {
 
                     /* Wait for the result while getting BUS POSITION ARRAY */
                     if (busPos_ArrayList == null) {
-                        try {
-                            this.wait();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+//                        try {
+//                            this.wait();
+//                        } catch (InterruptedException e) {
+//                            e.printStackTrace();
+//                        }
                     }
 
                     /* Set bus plate number to station if there is bus near a station. */
@@ -83,12 +87,38 @@ public class BusStationsListActivity extends AppCompatActivity {
                     listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                         @Override
                         public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                            String station_name = busStation_ArrayList.get(i).getStationNm();
+                            BusStationInfoItem selected_cur_station = busStation_ArrayList.get(i);
+                            BusStationInfoItem selected_prev_station = busStation_ArrayList.get(i-1);
 
-                            if(on_info.getText().length() > 0)
-                                off_info.setText(station_name);
-                            else
-                                on_info.setText(station_name);
+                            if(on_info.getText().length() > 0) {
+                                off_info.setText(selected_cur_station.getStationNm());
+                            } else {
+                                BusApiService arr_service = BusApiService.retrofit.create(BusApiService.class);
+                                Call<BusArrInfoWrapper> arr_call = arr_service.getArrInfoByRoute(selected_cur_station.getBusRouteId()
+                                                                                                ,selected_cur_station.getStation()
+                                                                                                ,selected_cur_station.getSeq(),API_KEY);
+                                arr_call.enqueue(new Callback<BusArrInfoWrapper>() {
+                                    @Override
+                                    public void onResponse(Call<BusArrInfoWrapper> call, Response<BusArrInfoWrapper> response) {
+                                        if(response.isSuccessful()){
+                                            BusArrInfoWrapper result = response.body();
+                                            String bus_plain_no = result.getBusArrInfoList().get(0).getPlainNo1();
+                                            String bus_arrive_msg = result.getBusArrInfoList().get(0).getArrmsg1();
+
+                                            arr_bus_info.setText(bus_plain_no + "  " + bus_arrive_msg);
+                                        }else{
+
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<BusArrInfoWrapper> call, Throwable t) {
+                                        t.printStackTrace();
+                                    }
+                                });
+
+                                on_info.setText(selected_cur_station.getStationNm());
+                            }
                         }
                     });
 
@@ -103,7 +133,8 @@ public class BusStationsListActivity extends AppCompatActivity {
             }
         });
 
-        Call<BusPosInfoWrapper> pos_call = station_service.getBusPosByRtid(ROUTE_ID, API_KEY);
+        BusApiService pos_service = BusApiService.retrofit.create(BusApiService.class);
+        Call<BusPosInfoWrapper> pos_call = pos_service.getBusPosByRtid(ROUTE_ID, API_KEY);
         pos_call.enqueue(new Callback<BusPosInfoWrapper>() {
             @Override
             public void onResponse(Call<BusPosInfoWrapper> call, Response<BusPosInfoWrapper> response) {
@@ -119,7 +150,7 @@ public class BusStationsListActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<BusPosInfoWrapper> call, Throwable t) {
-
+                t.printStackTrace();
             }
         });
 
@@ -140,6 +171,7 @@ public class BusStationsListActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 Toast.makeText(getApplicationContext(),"Making a Reservation is successed!",Toast.LENGTH_LONG).show();
             }
         });

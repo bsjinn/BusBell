@@ -1,5 +1,6 @@
 package com.example.sojin.busbellapp;
 
+import com.example.sojin.busbellapp.item.BusArrInfoWrapper;
 import com.example.sojin.busbellapp.item.BusPosInfoWrapper;
 import com.example.sojin.busbellapp.item.BusRouteInfoWrapper;
 import com.example.sojin.busbellapp.item.BusStationInfoWrapper;
@@ -27,6 +28,10 @@ public interface BusApiService {
     @GET("api/rest/buspos/getBusPosByRtid")
     Call<BusPosInfoWrapper> getBusPosByRtid(@Query("busRouteId") String busRouteId,
                                             @Query(value = "serviceKey", encoded = true) String serviceKey);
+
+    @GET("api/rest/arrive/getArrInfoByRoute")
+    Call<BusArrInfoWrapper> getArrInfoByRoute(@Query("busRouteId") String busRouteId, @Query("stId") String stId,
+                                              @Query("ord") String ord, @Query(value = "serviceKey", encoded = true) String serviceKey);
 
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(BASE_URL)

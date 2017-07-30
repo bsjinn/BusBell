@@ -10,8 +10,10 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.sojin.busbellapp.activity.BusStationsListActivity;
+import com.example.sojin.busbellapp.activity.MainActivity;
 import com.example.sojin.busbellapp.adapter.BusRouteListAdapter;
 import com.example.sojin.busbellapp.item.BusRouteInfoItem;
 import com.example.sojin.busbellapp.item.BusRouteInfoWrapper;
@@ -65,15 +67,28 @@ public class SearchFragment extends Fragment {
             }
         });
 
+        // TODO : Change the logic depend on which activity called the fragment
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String activity_name = getActivity().getClass().getName();
+
+                switch (getActivity().getClass().getSimpleName()){
+                    case "FavoriteAddActivity":
+                        Toast.makeText(getContext(),"Favorite",Toast.LENGTH_LONG).show();
+                        break;
+                    case "MainActivity":
+                        Toast.makeText(getContext(),"Main",Toast.LENGTH_LONG).show();
+                        break;
+                }
+
+                MainActivity.class.getName();
                 BusRouteInfoItem item = (BusRouteInfoItem) parent.getItemAtPosition(position);
 
                 Intent intent = new Intent(getActivity(), BusStationsListActivity.class);
                 intent.putExtra("routeId", item.getBusRouteId());
 
-                startActivity(intent);
+                //startActivity(intent);
             }
         });
 
