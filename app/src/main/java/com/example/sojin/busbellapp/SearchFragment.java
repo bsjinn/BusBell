@@ -3,6 +3,7 @@ package com.example.sojin.busbellapp;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +14,6 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.sojin.busbellapp.activity.BusStationsListActivity;
-import com.example.sojin.busbellapp.activity.MainActivity;
 import com.example.sojin.busbellapp.adapter.BusRouteListAdapter;
 import com.example.sojin.busbellapp.item.BusRouteInfoItem;
 import com.example.sojin.busbellapp.item.BusRouteInfoWrapper;
@@ -71,24 +71,28 @@ public class SearchFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                BusRouteInfoItem item = (BusRouteInfoItem) parent.getItemAtPosition(position);
                 String activity_name = getActivity().getClass().getName();
 
                 switch (getActivity().getClass().getSimpleName()){
                     case "FavoriteAddActivity":
-                        Toast.makeText(getContext(),"Favorite",Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getContext(),"Favorite",Toast.LENGTH_LONG).show();
+
+                        FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
+                        fragmentTransaction.replace(R.id.activity_favorite_add_frame_layout, new FavoriteAddFragment());
+                        fragmentTransaction.commit();
+
                         break;
                     case "MainActivity":
                         Toast.makeText(getContext(),"Main",Toast.LENGTH_LONG).show();
+
+                        Intent intent = new Intent(getActivity(), BusStationsListActivity.class);
+                        intent.putExtra("routeId", item.getBusRouteId());
+
+                        startActivity(intent);
+
                         break;
                 }
-
-                MainActivity.class.getName();
-                BusRouteInfoItem item = (BusRouteInfoItem) parent.getItemAtPosition(position);
-
-                Intent intent = new Intent(getActivity(), BusStationsListActivity.class);
-                intent.putExtra("routeId", item.getBusRouteId());
-
-                //startActivity(intent);
             }
         });
 
