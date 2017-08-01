@@ -1,53 +1,42 @@
 package com.example.sojin.busbellapp;
 
-import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.ListView;
+import android.widget.TextView;
 
+import com.example.sojin.busbellapp.adapter.BusStationsByRouteListAdapter;
+import com.example.sojin.busbellapp.item.BusStationInfoItem;
+import com.example.sojin.busbellapp.item.BusStationInfoWrapper;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link FavoriteAddFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link FavoriteAddFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import java.util.ArrayList;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class FavoriteAddFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private String routeId;
+    private ArrayList<BusStationInfoItem> stationList;
 
-    //private OnFragmentInteractionListener mListener;
+    private Button button;
+    private ListView listview;
+    private TextView on_station;
+    private TextView off_station;
 
-    public FavoriteAddFragment() {
-        // Required empty public constructor
-    }
+    public FavoriteAddFragment() { }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FavoriteAddFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static FavoriteAddFragment newInstance(String param1, String param2) {
+    public static FavoriteAddFragment newInstance(String param1) {
         FavoriteAddFragment fragment = new FavoriteAddFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,19 +45,75 @@ public class FavoriteAddFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        Toast.makeText(getContext(),"######",Toast.LENGTH_LONG).show();
-
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            routeId = getArguments().getString(ARG_PARAM1);
         }
+
+        String API_KEY = getString(R.string.api_key);
+
+        BusApiService service = BusApiService.retrofit.create(BusApiService.class);
+        Call<BusStationInfoWrapper> call = service.getBusStationByRoute(routeId, API_KEY);
+        call.enqueue(new Callback<BusStationInfoWrapper>() {
+            @Override
+            public void onResponse(Call<BusStationInfoWrapper> call, Response<BusStationInfoWrapper> response) {
+                if(response.isSuccessful()){
+                    BusStationInfoWrapper result = response.body();
+                    stationList = result.getBusStationList();
+
+                    BusStationsByRouteListAdapter adapter = new BusStationsByRouteListAdapter(stationList);
+                    listview.setAdapter(adapter);
+                }else{
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<BusStationInfoWrapper> call, Throwable t) {
+                t.printStackTrace();
+            }
+        });
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favorite_add, container, false);
+
+        on_station = (TextView)view.findViewById(R.id.fragment_favorite_add_on_station);
+        on_station.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                on_station.setText("");
+            }
+        });
+
+        off_station = (TextView)view.findViewById(R.id.fragment_favorite_add_off_station);
+        off_station.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                off_station.setText("");
+            }
+        });
+
+        listview = (ListView)view.findViewById(R.id.fragment_favorite_add_station_list);
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                BusStationInfoItem item = stationList.get(i);
+
+                if(on_station.getText().length() > 0)
+                    off_station.setText(item.getStationNm());
+                else
+                    on_station.setText(item.getStationNm());
+            }
+        });
+
+        button = (Button)view.findViewById(R.id.fragment_favorite_add_button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                getActivity().finish();
+            }
+        });
 
         return view;
     }

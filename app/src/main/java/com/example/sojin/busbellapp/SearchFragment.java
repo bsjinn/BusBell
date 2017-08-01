@@ -11,7 +11,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.example.sojin.busbellapp.activity.BusStationsListActivity;
 import com.example.sojin.busbellapp.adapter.BusRouteListAdapter;
@@ -76,16 +75,14 @@ public class SearchFragment extends Fragment {
 
                 switch (getActivity().getClass().getSimpleName()){
                     case "FavoriteAddActivity":
-                        //Toast.makeText(getContext(),"Favorite",Toast.LENGTH_LONG).show();
+                        Fragment fragment = FavoriteAddFragment.newInstance(item.getBusRouteId());
 
                         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
-                        fragmentTransaction.replace(R.id.activity_favorite_add_frame_layout, new FavoriteAddFragment());
+                        fragmentTransaction.replace(R.id.activity_favorite_add_frame_layout, fragment);
                         fragmentTransaction.commit();
 
                         break;
                     case "MainActivity":
-                        Toast.makeText(getContext(),"Main",Toast.LENGTH_LONG).show();
-
                         Intent intent = new Intent(getActivity(), BusStationsListActivity.class);
                         intent.putExtra("routeId", item.getBusRouteId());
 
