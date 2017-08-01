@@ -1,28 +1,50 @@
 package com.example.sojin.busbellapp.item;
 
-// 한 노선을 지나는 버스정류장을 나타내는 클래스
-public class BusStationsByRouteInfoItem {
-    String busRouteId;      // 노선 ID
-    String busRouteNm;      // 노선명
-    String seq;             // 순번
-    String section;         // 구간 ID
-    String station;         // 정류소 ID
-    String stationNm;       // 정류소 이름
-    String gpsX;            // X좌표
-    String gpsY;            // Y좌표
-    String direction;       // 진행방향
-    String fullSectDist;    // 정류소간 거리
-    String stationNo;       // 정류소 고유번호
-    String routeType;       // 노선 유형 (1:공항, 3:간선, 4:지선, 5:순환, 6:광역, 7:인천, 8:경기, 9:폐지, 0:공용)
-    String beginTm;         // 첫차 시간
-    String lastTm;          // 막차 시간
-    String trnstnid;        // 회차지 정류소ID
-    String posX;            // 좌표X
-    String posY;            // 좌표Y
-    String sectSpd;         // 구간속도
-    String arsId;           // 정류소 고유번호
-    String transYn;         // 회차지 여부
-    String busPos_plainNo; // 해당 정류장에 위치하는 버스 정보
+import org.simpleframework.xml.Element;
+
+public class BusStationInfoItem {
+    @Element(name = "busRouteId")
+    private String busRouteId;      // 노선 ID
+    @Element(name = "busRouteNm")
+    private String busRouteNm;      // 노선명
+    @Element(name = "seq")
+    private String seq;             // 순번
+    @Element(name = "section")
+    private String section;         // 구간 ID
+    @Element(name = "station")
+    private String station;         // 정류소 ID
+    @Element(name = "stationNm")
+    private String stationNm;       // 정류소 이름
+    @Element(name = "gpsX")
+    private String gpsX;            // X좌표
+    @Element(name = "gpsY")
+    private String gpsY;            // Y좌표
+    @Element(name = "direction")
+    private String direction;       // 진행방향
+    @Element(name = "fullSectDist")
+    private String fullSectDist;    // 정류소간 거리
+    @Element(name = "stationNo")
+    private String stationNo;       // 정류소 고유번호
+    @Element(name = "routeType")
+    private String routeType;       // 노선 유형 (1:공항, 3:간선, 4:지선, 5:순환, 6:광역, 7:인천, 8:경기, 9:폐지, 0:공용)
+    @Element(name = "beginTm")
+    private String beginTm;         // 첫차 시간
+    @Element(name = "lastTm")
+    private String lastTm;          // 막차 시간
+    @Element(name = "trnstnid")
+    private String trnstnid;        // 회차지 정류소ID
+    @Element(name = "posX")
+    private String posX;            // 좌표X
+    @Element(name = "posY")
+    private String posY;            // 좌표Y
+    @Element(name = "sectSpd")
+    private String sectSpd;         // 구간속도
+    @Element(name = "arsId")
+    private String arsId;           // 정류소 고유번호
+    @Element(name = "transYn")
+    private String transYn;         // 회차지 여부
+
+    private String busPos_plainNo; // 해당 정류장에 위치하는 버스 정보
 
 
     public String getBusRouteId() {
