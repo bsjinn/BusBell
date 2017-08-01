@@ -33,7 +33,7 @@ public class MyFirebaseMessagingService extends com.google.firebase.messaging.Fi
 
         Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
         NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.mipmap.ic_launcher)
+                .setSmallIcon(R.drawable.bus_icon)
                 .setContentTitle("하차 알리미")
                 .setContentText(messageBody)
                 .setAutoCancel(true)
