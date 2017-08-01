@@ -31,11 +31,7 @@
             android:descendantFocusability="blocksDescendants">
 
                 <ImageView
-<<<<<<< HEAD
                     android:id="@+id/busIm"
-=======
-                    android:id="@+id/img"
->>>>>>> 3e013b4b9fb33298b292c628d3e12b6bf5537ce8
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
 
