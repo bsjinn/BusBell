@@ -6,7 +6,7 @@
     <string name="title_search">Search</string>
 
     <string name="api_key">3nvztFALDhnl5ffO0FuwkATq9JDSLJPHjSSVRByOsG78s9vF%2F4SuBbuKcle1XytZB0hkdU19wrBSnqDKHWHpdA%3D%3D</string>
-    <string name="server_address"></string>
+    <string name="server_address">54.214.224.43</string>
     <string name="server_port">3000</string>
 
     <!-- TODO: Remove or change this placeholder text -->

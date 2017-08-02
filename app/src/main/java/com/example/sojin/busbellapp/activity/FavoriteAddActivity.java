@@ -5,7 +5,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 
 import com.example.sojin.busbellapp.R;
-import com.example.sojin.busbellapp.SearchFragment;
+import com.example.sojin.busbellapp.fragment.SearchFragment;
 
 public class FavoriteAddActivity extends AppCompatActivity {
 

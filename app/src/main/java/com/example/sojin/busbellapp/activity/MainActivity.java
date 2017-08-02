@@ -11,9 +11,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.example.sojin.busbellapp.FavoriteFragment;
+import com.example.sojin.busbellapp.fragment.FavoriteFragment;
 import com.example.sojin.busbellapp.R;
-import com.example.sojin.busbellapp.SearchFragment;
+import com.example.sojin.busbellapp.fragment.SearchFragment;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 public class MainActivity extends AppCompatActivity {

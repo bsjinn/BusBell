@@ -1,4 +1,4 @@
-package com.example.sojin.busbellapp;
+package com.example.sojin.busbellapp.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.example.sojin.busbellapp.BusApiService;
+import com.example.sojin.busbellapp.R;
 import com.example.sojin.busbellapp.activity.BusStationsListActivity;
 import com.example.sojin.busbellapp.adapter.BusRouteListAdapter;
 import com.example.sojin.busbellapp.item.BusRouteInfoItem;
@@ -28,7 +30,6 @@ public class SearchFragment extends Fragment {
     private Button okButton;
     private ListView listView;
 
-    //TODO : Hide a keyboard when input is finished and button is clicked
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
@@ -60,22 +61,20 @@ public class SearchFragment extends Fragment {
 
                     @Override
                     public void onFailure(Call<BusRouteInfoWrapper> call, Throwable t) {
-
+                        t.printStackTrace();
                     }
                 });
             }
         });
 
-        // TODO : Change the logic depend on which activity called the fragment
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 BusRouteInfoItem item = (BusRouteInfoItem) parent.getItemAtPosition(position);
-                String activity_name = getActivity().getClass().getName();
 
                 switch (getActivity().getClass().getSimpleName()){
                     case "FavoriteAddActivity":
-                        Fragment fragment = FavoriteAddFragment.newInstance(item.getBusRouteId());
+                        Fragment fragment = FavoriteAddFragment.newInstance(item.getBusRouteId(),item.getBusRouteNm());
 
                         FragmentTransaction fragmentTransaction = getActivity().getSupportFragmentManager().beginTransaction();
                         fragmentTransaction.replace(R.id.activity_favorite_add_frame_layout, fragment);

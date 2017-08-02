@@ -1,5 +1,7 @@
-package com.example.sojin.busbellapp;
+package com.example.sojin.busbellapp.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -7,12 +9,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.example.sojin.busbellapp.BusApiService;
+import com.example.sojin.busbellapp.R;
 import com.example.sojin.busbellapp.adapter.BusStationsByRouteListAdapter;
 import com.example.sojin.busbellapp.item.BusStationInfoItem;
 import com.example.sojin.busbellapp.item.BusStationInfoWrapper;
+import com.example.sojin.busbellapp.item.Favorite;
 
 import java.util.ArrayList;
 
@@ -22,21 +28,33 @@ import retrofit2.Response;
 
 public class FavoriteAddFragment extends Fragment {
     private static final String ARG_PARAM1 = "param1";
+    private static final String ARG_PARAM2 = "param2";
 
-    private String routeId;
     private ArrayList<BusStationInfoItem> stationList;
 
     private Button button;
     private ListView listview;
-    private TextView on_station;
-    private TextView off_station;
+    private EditText editText;
+    private TextView depart_station;
+    private TextView arrive_station;
+
+    private String routeId;
+    private String routeNm;
+
+    private String favorite_title;
+    private String depart_station_id;
+    private String depart_station_nm;
+    private String arrive_pre_station_id;
+    private String arrive_station_id;
+    private String arrive_station_nm;
 
     public FavoriteAddFragment() { }
 
-    public static FavoriteAddFragment newInstance(String param1) {
+    public static FavoriteAddFragment newInstance(String param1, String param2) {
         FavoriteAddFragment fragment = new FavoriteAddFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
+        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -47,6 +65,7 @@ public class FavoriteAddFragment extends Fragment {
 
         if (getArguments() != null) {
             routeId = getArguments().getString(ARG_PARAM1);
+            routeNm = getArguments().getString(ARG_PARAM2);
         }
 
         String API_KEY = getString(R.string.api_key);
@@ -78,19 +97,21 @@ public class FavoriteAddFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favorite_add, container, false);
 
-        on_station = (TextView)view.findViewById(R.id.fragment_favorite_add_on_station);
-        on_station.setOnClickListener(new View.OnClickListener() {
+        editText = (EditText)view.findViewById(R.id.fragment_favorite_add_title);
+
+        depart_station = (TextView)view.findViewById(R.id.fragment_favorite_add_on_station);
+        depart_station.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                on_station.setText("");
+                depart_station.setText("");
             }
         });
 
-        off_station = (TextView)view.findViewById(R.id.fragment_favorite_add_off_station);
-        off_station.setOnClickListener(new View.OnClickListener() {
+        arrive_station = (TextView)view.findViewById(R.id.fragment_favorite_add_off_station);
+        arrive_station.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                off_station.setText("");
+                arrive_station.setText("");
             }
         });
 
@@ -99,11 +120,21 @@ public class FavoriteAddFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 BusStationInfoItem item = stationList.get(i);
+                BusStationInfoItem prev_item = stationList.get(i-1);
 
-                if(on_station.getText().length() > 0)
-                    off_station.setText(item.getStationNm());
-                else
-                    on_station.setText(item.getStationNm());
+                if(depart_station.getText().length() > 0) {
+                    arrive_station.setText(item.getStationNm());
+
+                    arrive_pre_station_id = prev_item.getStation();
+                    arrive_station_id = item.getStation();
+                    arrive_station_nm = item.getStationNm();
+                }
+                else {
+                    depart_station.setText(item.getStationNm());
+
+                    depart_station_id = item.getStation();
+                    depart_station_nm = item.getStationNm();
+                }
             }
         });
 
@@ -111,49 +142,15 @@ public class FavoriteAddFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Favorite item = new Favorite(0, "temp", depart_station_id, depart_station_nm, arrive_pre_station_id, arrive_station_id, arrive_station_nm, routeId, routeNm);
+                Intent returnIntent = new Intent();
+                returnIntent.putExtra("item", item);
+
+                getActivity().setResult(Activity.RESULT_OK, returnIntent);
                 getActivity().finish();
             }
         });
 
         return view;
     }
-
-//    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
-//
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
-//
-//    @Override
-//    public void onDetach() {
-//        super.onDetach();
-//        mListener = null;
-//    }
-//
-//    /**
-//     * This interface must be implemented by activities that contain this
-//     * fragment to allow an interaction in this fragment to be communicated
-//     * to the activity and potentially other fragments contained in that
-//     * activity.
-//     * <p>
-//     * See the Android Training lesson <a href=
-//     * "http://developer.android.com/training/basics/fragments/communicating.html"
-//     * >Communicating with Other Fragments</a> for more information.
-//     */
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        void onFragmentInteraction(Uri uri);
-//    }
 }

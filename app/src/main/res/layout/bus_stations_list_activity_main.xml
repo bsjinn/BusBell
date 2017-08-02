@@ -24,7 +24,7 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/bus_station_list_on_info"
+                android:id="@+id/bus_station_list_depart_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/bus_station_list_arr_bus_info"
+                android:id="@+id/bus_station_list_arrive_bus_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content" />
 
             <TextView
-                android:id="@+id/bus_station_list_off_info"
+                android:id="@+id/bus_station_list_arrive_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 

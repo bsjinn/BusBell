@@ -11,6 +11,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.sojin.busbellapp.AlarmApiService;
 import com.example.sojin.busbellapp.BusApiService;
 import com.example.sojin.busbellapp.R;
 import com.example.sojin.busbellapp.adapter.BusStationsByRouteListAdapter;
@@ -19,6 +20,7 @@ import com.example.sojin.busbellapp.item.BusPosInfoItem;
 import com.example.sojin.busbellapp.item.BusPosInfoWrapper;
 import com.example.sojin.busbellapp.item.BusStationInfoItem;
 import com.example.sojin.busbellapp.item.BusStationInfoWrapper;
+import com.example.sojin.busbellapp.item.RequestItem;
 
 import java.util.ArrayList;
 
@@ -30,9 +32,13 @@ public class BusStationsListActivity extends AppCompatActivity {
     private ListView listView;
     private Button button;
 
-    private TextView on_info;
-    private TextView off_info;
-    private TextView arr_bus_info;
+    private TextView depart_info;
+    private TextView arrive_info;
+    private TextView arrive_bus_info;
+
+    private String busID;
+    private String preStnID;
+    private String destStnID;
 
     private ArrayList<BusPosInfoItem> busPos_ArrayList;
     private ArrayList<BusStationInfoItem> busStation_ArrayList;
@@ -43,13 +49,16 @@ public class BusStationsListActivity extends AppCompatActivity {
         setContentView(R.layout.bus_stations_list_activity_main);
 
         Intent intent = new Intent(this.getIntent());
+
         String ROUTE_ID = intent.getStringExtra("routeId");
         final String API_KEY = getString(R.string.api_key);
 
         listView = (ListView)findViewById(R.id.listView_bus_station_list);
-        on_info = (TextView)findViewById(R.id.bus_station_list_on_info);
-        off_info = (TextView)findViewById(R.id.bus_station_list_off_info);
-        arr_bus_info = (TextView)findViewById(R.id.bus_station_list_arr_bus_info);
+
+        depart_info = (TextView)findViewById(R.id.bus_station_list_depart_info);
+        arrive_info = (TextView)findViewById(R.id.bus_station_list_arrive_info);
+        arrive_bus_info = (TextView)findViewById(R.id.bus_station_list_arrive_bus_info);
+
         button = (Button)findViewById(R.id.bus_station_list_button);
 
         BusApiService station_service = BusApiService.retrofit.create(BusApiService.class);
@@ -90,8 +99,11 @@ public class BusStationsListActivity extends AppCompatActivity {
                             BusStationInfoItem selected_cur_station = busStation_ArrayList.get(i);
                             BusStationInfoItem selected_prev_station = busStation_ArrayList.get(i-1);
 
-                            if(on_info.getText().length() > 0) {
-                                off_info.setText(selected_cur_station.getStationNm());
+                            if(depart_info.getText().length() > 0) {
+                                arrive_info.setText(selected_cur_station.getStationNm());
+
+                                destStnID = selected_cur_station.getStation();
+                                preStnID = selected_prev_station.getSection();
                             } else {
                                 BusApiService arr_service = BusApiService.retrofit.create(BusApiService.class);
                                 Call<BusArrInfoWrapper> arr_call = arr_service.getArrInfoByRoute(selected_cur_station.getBusRouteId()
@@ -105,7 +117,9 @@ public class BusStationsListActivity extends AppCompatActivity {
                                             String bus_plain_no = result.getBusArrInfoList().get(0).getPlainNo1();
                                             String bus_arrive_msg = result.getBusArrInfoList().get(0).getArrmsg1();
 
-                                            arr_bus_info.setText(bus_plain_no + "  " + bus_arrive_msg);
+                                            busID = result.getBusArrInfoList().get(0).getVehId1();
+
+                                            arrive_bus_info.setText(bus_plain_no + "  " + bus_arrive_msg);
                                         }else{
 
                                         }
@@ -117,7 +131,7 @@ public class BusStationsListActivity extends AppCompatActivity {
                                     }
                                 });
 
-                                on_info.setText(selected_cur_station.getStationNm());
+                                depart_info.setText(selected_cur_station.getStationNm());
                             }
                         }
                     });
@@ -142,7 +156,7 @@ public class BusStationsListActivity extends AppCompatActivity {
                     BusPosInfoWrapper result = response.body();
                     busPos_ArrayList = result.getBusPosList();
 
-                    // TODO: Check if Station-Thread is waited
+                // TODO: Check if Station-Thread is waited
                 }else{
 
                 }
@@ -154,16 +168,16 @@ public class BusStationsListActivity extends AppCompatActivity {
             }
         });
 
-        on_info.setOnClickListener(new View.OnClickListener() {
+        depart_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                on_info.setText("");
+                depart_info.setText("");
             }
         });
-        off_info.setOnClickListener(new View.OnClickListener() {
+        arrive_info.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                off_info.setText("");
+                arrive_info.setText("");
             }
         });
 
@@ -171,6 +185,24 @@ public class BusStationsListActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                AlarmApiService service = AlarmApiService.retrofit.create(AlarmApiService.class);
+                Call<RequestItem> call = service.request("my device_id", busID, preStnID, destStnID);
+                call.enqueue(new Callback<RequestItem>() {
+                    @Override
+                    public void onResponse(Call<RequestItem> call, Response<RequestItem> response) {
+                        if(response.isSuccessful()){
+                            RequestItem result = response.body();
+
+                        }else {
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<RequestItem> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
 
                 Toast.makeText(getApplicationContext(),"Making a Reservation is successed!",Toast.LENGTH_LONG).show();
             }
