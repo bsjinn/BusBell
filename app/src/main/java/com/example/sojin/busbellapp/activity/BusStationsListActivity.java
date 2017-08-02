@@ -46,7 +46,7 @@ public class BusStationsListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.bus_stations_list_activity_main);
+        setContentView(R.layout.activity_bus_stations_list);
 
         Intent intent = new Intent(this.getIntent());
 

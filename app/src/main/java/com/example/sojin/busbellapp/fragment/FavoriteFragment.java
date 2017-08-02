@@ -28,7 +28,7 @@ public class FavoriteFragment extends Fragment {
     private Realm realm;
 
     private String busID;
-    private String API_KEY = getString(R.string.api_key);
+//    private String API_KEY = getString(R.string.api_key);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
