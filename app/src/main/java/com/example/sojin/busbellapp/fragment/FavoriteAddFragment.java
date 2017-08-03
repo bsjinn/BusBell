@@ -44,6 +44,7 @@ public class FavoriteAddFragment extends Fragment {
     private String favorite_title;
     private String depart_station_id;
     private String depart_station_nm;
+    private String depart_station_seq;
     private String arrive_pre_station_id;
     private String arrive_station_id;
     private String arrive_station_nm;
@@ -134,6 +135,8 @@ public class FavoriteAddFragment extends Fragment {
 
                     depart_station_id = item.getStation();
                     depart_station_nm = item.getStationNm();
+
+                    depart_station_seq = item.getSeq();
                 }
             }
         });
@@ -142,7 +145,10 @@ public class FavoriteAddFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Favorite item = new Favorite(0, "temp", depart_station_id, depart_station_nm, arrive_pre_station_id, arrive_station_id, arrive_station_nm, routeId, routeNm);
+                Favorite item = new Favorite(0, editText.getText().toString()
+                        , depart_station_id, depart_station_nm, depart_station_seq
+                        , arrive_pre_station_id, arrive_station_id, arrive_station_nm
+                        , routeId, routeNm);
                 Intent returnIntent = new Intent();
                 returnIntent.putExtra("item", item);
 

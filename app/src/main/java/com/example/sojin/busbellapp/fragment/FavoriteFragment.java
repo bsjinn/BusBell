@@ -1,6 +1,8 @@
 package com.example.sojin.busbellapp.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -10,35 +12,58 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
+import com.example.sojin.busbellapp.AlarmApiService;
+import com.example.sojin.busbellapp.BusApiService;
+import com.example.sojin.busbellapp.db.Migration;
 import com.example.sojin.busbellapp.R;
 import com.example.sojin.busbellapp.activity.FavoriteAddActivity;
 import com.example.sojin.busbellapp.adapter.FavoriteListAdapter;
+import com.example.sojin.busbellapp.item.BusArrInfoItem;
+import com.example.sojin.busbellapp.item.BusArrInfoWrapper;
 import com.example.sojin.busbellapp.item.Favorite;
+import com.example.sojin.busbellapp.item.RequestItem;
 
 import java.util.ArrayList;
 
 import io.realm.Realm;
+import io.realm.RealmConfiguration;
 import io.realm.RealmResults;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class FavoriteFragment extends Fragment {
     private ArrayList<Favorite> favoriteList;
     private FavoriteListAdapter favoriteAdapter;
 
     private Realm realm;
-
     private String busID;
-//    private String API_KEY = getString(R.string.api_key);
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         Realm.init(getContext());
-        realm = Realm.getDefaultInstance();
+        realm = Realm.getInstance(new RealmConfiguration.Builder()
+                .schemaVersion(2)
+                .migration(new Migration())
+                .build()
+        );
+
+        FavoriteListAdapter.DeleteBtnClickListener clickListener = new FavoriteListAdapter.DeleteBtnClickListener() {
+            @Override
+            public void onDeleteBtnClick(int position) {
+                realm.beginTransaction();
+                RealmResults<Favorite> result = realm.where(Favorite.class).findAll();
+                result.deleteFromRealm(position);
+                realm.commitTransaction();
+            }
+        };
 
         favoriteList = new ArrayList<Favorite>(realm.where(Favorite.class).findAll());
-        favoriteAdapter = new FavoriteListAdapter(favoriteList);
+        favoriteAdapter = new FavoriteListAdapter(favoriteList, clickListener);
     }
 
     @Override
@@ -49,73 +74,93 @@ public class FavoriteFragment extends Fragment {
         final ListView listview = (ListView)view.findViewById(R.id.fragment_favorite_listview);
 
         // TODO : Change the way that how to delete the record from database
-        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                realm.beginTransaction();
-                RealmResults<Favorite> result = realm.where(Favorite.class).findAll();
-                result.deleteFromRealm(i);
-                favoriteList.remove(i);
-                favoriteAdapter.notifyDataSetChanged();
-                realm.commitTransaction();
-            }
-        });
-
-        // TODO : Send an alarm request using favorite data
-        // TODO : Solve synchronization problem between Alram service and Bus service
 //        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 //            @Override
 //            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-//                BusFavoriteItem item = favoriteList.get(i);
-//
-//                BusApiService bus_service = BusApiService.retrofit.create(BusApiService.class);
-//                Call<BusArrInfoWrapper> call = bus_service.getArrInfoByRoute(item.getRoute_id(), item.getDepart_station_id(), "123", API_KEY);
-//                call.enqueue(new Callback<BusArrInfoWrapper>() {
-//                    @Override
-//                    public void onResponse(Call<BusArrInfoWrapper> call, Response<BusArrInfoWrapper> response) {
-//                        if(response.isSuccessful()){
-//                            BusArrInfoWrapper result = response.body();
-//                            busID = result.getBusArrInfoList().get(0).getVehId1();
-//
-//                            FavoriteFragment.this.notify();
-//                        }else {
-//
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<BusArrInfoWrapper> call, Throwable t) {
-//                        t.printStackTrace();
-//                    }
-//                });
-//
-//                try {
-//                    wait();
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//
-//                AlarmApiService alarm_service = AlarmApiService.retrofit.create(AlarmApiService.class);
-//                Call<RequestItem> alarm_call = alarm_service.request("my device_id", busID, item.getArrive_pre_station_id(), item.getArrive_station_id());
-//                alarm_call.enqueue(new Callback<RequestItem>() {
-//                    @Override
-//                    public void onResponse(Call<RequestItem> call, Response<RequestItem> response) {
-//                        if(response.isSuccessful()){
-//                            RequestItem result = response.body();
-//
-//                            Log.i("####",response.raw().toString());
-//                        }else {
-//                            Log.i("$$$$",response.raw().toString());
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onFailure(Call<RequestItem> call, Throwable t) {
-//                        t.printStackTrace();
-//                    }
-//                });
+//                realm.beginTransaction();
+//                RealmResults<Favorite> result = realm.where(Favorite.class).findAll();
+//                result.deleteFromRealm(i);
+//                favoriteList.remove(i);
+//                favoriteAdapter.notifyDataSetChanged();
+//                realm.commitTransaction();
 //            }
 //        });
+
+        // TODO : Send an alarm request using favorite data
+        // TODO : Solve synchronization problem between Alram service and Bus service
+        listview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                String API_KEY = getString(R.string.api_key);
+
+                final Favorite item = favoriteList.get(i);
+
+                final String preStnID = item.getArrive_pre_station_id();
+                final String destStnID = item.getArrive_station_id();
+
+                BusApiService bus_service = BusApiService.retrofit.create(BusApiService.class);
+                Call<BusArrInfoWrapper> call = bus_service.getArrInfoByRoute(item.getRoute_id()
+                                                                            ,item.getDepart_station_id()
+                                                                            ,item.getDepart_station_seq()
+                                                                            ,API_KEY);
+                call.enqueue(new Callback<BusArrInfoWrapper>(){
+                    @Override
+                    public void onResponse(Call<BusArrInfoWrapper> call, Response<BusArrInfoWrapper> response) {
+                        if(response.isSuccessful()){
+                            BusArrInfoWrapper result = response.body();
+                            BusArrInfoItem arr_item = result.getBusArrInfoList().get(0);
+
+                            busID = result.getBusArrInfoList().get(0).getVehId1();
+
+                            AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getActivity());
+                            alertBuilder.setTitle("예약하기")
+                                    .setMessage("승차정류장 : " + item.getDepart_station_nm()+ "\n" +
+                                            "하차정류장 : " + item.getArrive_station_nm() + "\n" +
+                                            "버스정보 : " + arr_item.getPlainNo1() + " - " + arr_item.getArrmsg1())
+                                    .setCancelable(false)
+                                    .setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            AlarmApiService alarmApiService = AlarmApiService.retrofit.create(AlarmApiService.class);
+                                            Call<RequestItem> call = alarmApiService.request("my device_id", busID, preStnID, destStnID);
+                                            call.enqueue(new Callback<RequestItem>() {
+                                                @Override
+                                                public void onResponse(Call<RequestItem> call, Response<RequestItem> response) {
+                                                    RequestItem result = response.body();
+
+                                                    if(result.getReqID() > 0)
+                                                        Toast.makeText(getContext(), "예약을 성공하였습니다.", Toast.LENGTH_SHORT).show();
+
+                                                    return;
+                                                }
+
+                                                @Override
+                                                public void onFailure(Call<RequestItem> call, Throwable t) {
+
+                                                }
+                                            });
+                                        }
+                                    }).setNegativeButton("취소", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialogInterface, int i) {
+                                            return;
+                                        }
+                                    });
+
+                            AlertDialog alertDialog = alertBuilder.create();
+                            alertDialog.show();
+                        }else {
+
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<BusArrInfoWrapper> call, Throwable t) {
+                        t.printStackTrace();
+                    }
+                });
+            }
+        });
         listview.setAdapter(favoriteAdapter);
 
         FloatingActionButton fab = (FloatingActionButton)view.findViewById(R.id.fragment_favorite_fab);

@@ -7,6 +7,10 @@ package com.example.sojin.busbellapp.item;
 public class RequestItem {
     int reqID;
 
+    public RequestItem() {
+        reqID = -1;
+    }
+
     public int getReqID() {
         return reqID;
     }

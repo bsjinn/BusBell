@@ -15,20 +15,21 @@ public class Favorite extends RealmObject implements Serializable{
     private String favorite_title;
     private String depart_station_id;
     private String depart_station_nm;
+    private String depart_station_seq;
     private String arrive_pre_station_id;
     private String arrive_station_id;
     private String arrive_station_nm;
     private String route_id;
     private String route_nm;
 
-    public Favorite() {
-    }
+    public Favorite() { }
 
-    public Favorite(int idx, String favorite_title, String depart_station_id, String depart_station_nm, String arrive_pre_station_id, String arrive_station_id, String arrive_station_nm, String route_id, String route_nm) {
+    public Favorite(int idx, String favorite_title, String depart_station_id, String depart_station_nm, String depart_station_seq, String arrive_pre_station_id, String arrive_station_id, String arrive_station_nm, String route_id, String route_nm) {
         this.idx = idx;
         this.favorite_title = favorite_title;
         this.depart_station_id = depart_station_id;
         this.depart_station_nm = depart_station_nm;
+        this.depart_station_seq = depart_station_seq;
         this.arrive_pre_station_id = arrive_pre_station_id;
         this.arrive_station_id = arrive_station_id;
         this.arrive_station_nm = arrive_station_nm;
@@ -66,6 +67,14 @@ public class Favorite extends RealmObject implements Serializable{
 
     public void setDepart_station_nm(String depart_station_nm) {
         this.depart_station_nm = depart_station_nm;
+    }
+
+    public String getDepart_station_seq() {
+        return depart_station_seq;
+    }
+
+    public void setDepart_station_seq(String depart_station_seq) {
+        this.depart_station_seq = depart_station_seq;
     }
 
     public String getArrive_pre_station_id() {
