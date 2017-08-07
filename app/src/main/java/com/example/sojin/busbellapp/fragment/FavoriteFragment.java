@@ -16,13 +16,13 @@ import android.widget.Toast;
 
 import com.example.sojin.busbellapp.AlarmApiService;
 import com.example.sojin.busbellapp.BusApiService;
-import com.example.sojin.busbellapp.db.Migration;
 import com.example.sojin.busbellapp.R;
 import com.example.sojin.busbellapp.activity.FavoriteAddActivity;
 import com.example.sojin.busbellapp.adapter.FavoriteListAdapter;
+import com.example.sojin.busbellapp.db.Favorite;
+import com.example.sojin.busbellapp.db.Migration;
 import com.example.sojin.busbellapp.item.BusArrInfoItem;
 import com.example.sojin.busbellapp.item.BusArrInfoWrapper;
-import com.example.sojin.busbellapp.item.Favorite;
 import com.example.sojin.busbellapp.item.RequestItem;
 
 import java.util.ArrayList;

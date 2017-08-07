@@ -13,43 +13,39 @@
 
                 <TextView
                     android:id="@+id/bus_station_item_station_nm"
-                    android:layout_columnWeight="15"
                     android:textSize="14dp"
-                    android:textColor="@color/textTitle"
                     android:layout_gravity="fill"
+                    android:textColor="@color/textTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <ImageView
                     android:id="@+id/bus_station_item_img"
+                    android:layout_gravity="center"
                     android:layout_rowSpan="2"
-                    android:layout_columnWeight="1"
                     android:layout_width="25dp"
                     android:layout_height="25dp"/>
 
                 <TextView
                     android:id="@+id/bus_station_item_info_1"
-                    android:layout_columnWeight="15"
                     android:textSize="12dp"
-                    android:textColor="@color/textContent"
                     android:layout_gravity="fill"
+                    android:textColor="@color/textContent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
                 <TextView
                     android:id="@+id/bus_station_item_info_2"
-                    android:layout_columnWeight="15"
                     android:textSize="12dp"
-                    android:textColor="@color/textContent"
                     android:layout_gravity="fill"
+                    android:textColor="@color/textContent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
                 <TextView
                     android:id="@+id/bus_station_item_plain_no"
-                    android:layout_columnWeight="1"
                     android:textAlignment="center"
                     android:textSize="12dp"
                     android:textColor="@color/textTitle"
-                    android:layout_width="wrap_content"
+                    android:layout_width="80dp"
                     android:layout_height="wrap_content"/>
         </GridLayout>
 

@@ -17,7 +17,6 @@
             android:textColor="@color/textTitle"
             android:textSize="16dp"
             android:layout_columnSpan="2"
-            android:layout_columnWeight="20"
             android:layout_gravity="fill"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
@@ -25,18 +24,8 @@
         <ImageButton
             android:id="@+id/favorite_item_delete_button"
             android:layout_rowSpan="2"
-            android:layout_columnWeight="1"
             app:srcCompat="@drawable/ic_delete_black_24dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/favorite_item_station_info"
-            android:layout_columnWeight="15"
-            android:textColor="@color/textContent"
-            android:textSize="12dp"
-            android:layout_gravity="fill"
-            android:layout_width="wrap_content"
+            android:layout_width="40dp"
             android:layout_height="wrap_content"/>
 
         <TextView
@@ -44,8 +33,18 @@
             android:textColor="@color/textContent"
             android:textSize="12dp"
             android:textAlignment="center"
-            android:layout_columnWeight="5"
+            android:layout_columnWeight="1"
             android:layout_gravity="fill"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:id="@+id/favorite_item_station_info"
+            android:textColor="@color/textContent"
+            android:paddingLeft="3dp"
+            android:textSize="12dp"
+            android:layout_gravity="fill"
+            android:layout_columnWeight="1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 

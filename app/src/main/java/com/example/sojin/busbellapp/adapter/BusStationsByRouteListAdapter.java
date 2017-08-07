@@ -62,8 +62,13 @@ public class BusStationsByRouteListAdapter extends BaseAdapter {
         station_info2.setText(item.getBeginTm() + "~" + item.getLastTm());
         station_plain_no.setText(item.getBusPos_plainNo());
 
-        if(station_plain_no.getText().length() > 0)
+        if(station_plain_no.getText().length() > 0) {
             bus_img.setImageResource(R.drawable.busim);
+            //bus_img.setVisibility(View.VISIBLE);
+        } else {
+            bus_img.setImageResource(0);
+            //bus_img.setVisibility(View.INVISIBLE);
+        }
 
         return convertView;
     }

@@ -9,7 +9,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.sojin.busbellapp.R;
-import com.example.sojin.busbellapp.item.Favorite;
+import com.example.sojin.busbellapp.db.Favorite;
 
 import java.util.ArrayList;
 

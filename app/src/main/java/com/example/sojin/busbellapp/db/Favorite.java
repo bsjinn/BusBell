@@ -1,4 +1,4 @@
-package com.example.sojin.busbellapp.item;
+package com.example.sojin.busbellapp.db;
 
 import java.io.Serializable;
 

@@ -22,6 +22,7 @@ public class Splash extends Activity {
         super.onCreate(icicle);
         setContentView(R.layout.splah);
 
+
         //Splash 뒤에 MainActivity 실행시키고 종효
         new Handler().postDelayed(new Runnable(){
             @Override

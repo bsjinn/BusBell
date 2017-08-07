@@ -18,7 +18,7 @@ import com.example.sojin.busbellapp.R;
 import com.example.sojin.busbellapp.adapter.BusStationsByRouteListAdapter;
 import com.example.sojin.busbellapp.item.BusStationInfoItem;
 import com.example.sojin.busbellapp.item.BusStationInfoWrapper;
-import com.example.sojin.busbellapp.item.Favorite;
+import com.example.sojin.busbellapp.db.Favorite;
 
 import java.util.ArrayList;
 

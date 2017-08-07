@@ -88,6 +88,7 @@ public class BusStationsListActivity extends AppCompatActivity {
 
                             if (posItem.getSectionId().equals(stnItem.getSection())) {
                                 stnItem.setBusPos_plainNo(posItem.getPlainNo());
+                                //stnItem.setSetImg(true);
                                 busStation_ArrayList.set(j, stnItem);
                             }
                         }
@@ -172,6 +173,7 @@ public class BusStationsListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 depart_info.setText("");
+                arrive_bus_info.setText("");
             }
         });
         arrive_info.setOnClickListener(new View.OnClickListener() {

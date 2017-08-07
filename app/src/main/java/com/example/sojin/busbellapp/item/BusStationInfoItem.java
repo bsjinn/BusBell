@@ -45,7 +45,7 @@ public class BusStationInfoItem {
     private String transYn;         // 회차지 여부
 
     private String busPos_plainNo; // 해당 정류장에 위치하는 버스 정보
-
+    private boolean isSetImg = false;
 
     public String getBusRouteId() {
         return busRouteId;
@@ -213,5 +213,13 @@ public class BusStationInfoItem {
 
     public void setBusPos_plainNo(String busPos_plainNo) {
         this.busPos_plainNo = busPos_plainNo;
+    }
+
+    public boolean isSetImg() {
+        return isSetImg;
+    }
+
+    public void setSetImg(boolean setImg) {
+        isSetImg = setImg;
     }
 }

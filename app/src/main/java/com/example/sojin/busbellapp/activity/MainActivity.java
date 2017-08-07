@@ -16,11 +16,6 @@ import com.example.sojin.busbellapp.fragment.FavoriteFragment;
 import com.example.sojin.busbellapp.fragment.SearchFragment;
 import com.google.firebase.messaging.FirebaseMessaging;
 
-/* 1. 첫 화면에 즐겨찾기 Fragment 설정
-*  2. 즐겨찾기 추가 버튼 우측 하단 이동
-*  3. 즐겨찾기 클릭하여 알람 요청 버튼
-*  4. 내 예약 정보 출력 및 클릭하여 취소 요청
-*  */
 public class MainActivity extends AppCompatActivity {
     EditText editText;
     Button okButton;
