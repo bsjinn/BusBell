@@ -44,23 +44,26 @@ public class BusStationsByRouteListAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.bus_stations_by_route_info_item, parent, false);
         }
 
-        TextView stationNm = (TextView)convertView.findViewById(R.id.stationNm);
-        TextView stationEtcInfo = (TextView)convertView.findViewById(R.id.stationEtcInfo);
-        TextView busPos_plainNo = (TextView)convertView.findViewById(R.id.plainNo);
-        ImageView busStopIm = (ImageView)convertView.findViewById(R.id.busIm);
+        TextView station_nm = (TextView)convertView.findViewById(R.id.bus_station_item_station_nm);
+        TextView station_info1 = (TextView)convertView.findViewById(R.id.bus_station_item_info_1);
+        TextView station_info2 = (TextView)convertView.findViewById(R.id.bus_station_item_info_2);
+        TextView station_plain_no = (TextView)convertView.findViewById(R.id.bus_station_item_plain_no);
+        ImageView bus_img = (ImageView)convertView.findViewById(R.id.bus_station_item_img);
 
-        stationNm.setFocusable(false);
-        stationEtcInfo.setFocusable(false);
-        busPos_plainNo.setFocusable(false);
+//        station_nm.setFocusable(false);
+//        station_info1.setFocusable(false);
+//        station_info2.setFocusable(false);
+//        station_plain_no.setFocusable(false);
 
         BusStationInfoItem item = busStationInfoItemList.get(position);
 
-        stationNm.setText(item.getStationNm());
-        stationEtcInfo.setText(item.getStationNo() + " / " + item.getBeginTm() + "~" + item.getLastTm());
-        busPos_plainNo.setText(item.getBusPos_plainNo());
+        station_nm.setText(item.getStationNm());
+        station_info1.setText(item.getStationNo());
+        station_info2.setText(item.getBeginTm() + "~" + item.getLastTm());
+        station_plain_no.setText(item.getBusPos_plainNo());
 
-        if(!busPos_plainNo.getText().equals(""))
-            busStopIm.setImageResource(R.drawable.busim);
+        if(station_plain_no.getText().length() > 0)
+            bus_img.setImageResource(R.drawable.busim);
 
         return convertView;
     }

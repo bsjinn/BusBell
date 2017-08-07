@@ -5,41 +5,52 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-        <LinearLayout
-            android:layout_weight="1"
-            android:orientation="vertical"
+        <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:descendantFocusability="blocksDescendants">
+            android:columnCount="2"
+            android:rowCount="3">
 
                 <TextView
-                    android:id="@+id/stationNm"
-                    android:layout_width="match_parent"
+                    android:id="@+id/bus_station_item_station_nm"
+                    android:layout_columnWeight="15"
+                    android:textSize="14dp"
+                    android:textColor="@color/textTitle"
+                    android:layout_gravity="fill"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+                <ImageView
+                    android:id="@+id/bus_station_item_img"
+                    android:layout_rowSpan="2"
+                    android:layout_columnWeight="1"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"/>
+
+                <TextView
+                    android:id="@+id/bus_station_item_info_1"
+                    android:layout_columnWeight="15"
+                    android:textSize="12dp"
+                    android:textColor="@color/textContent"
+                    android:layout_gravity="fill"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
                 <TextView
-                    android:id="@+id/stationEtcInfo"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_weight="3"
-            android:orientation="vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:descendantFocusability="blocksDescendants">
-
-                <ImageView
-                    android:id="@+id/busIm"
+                    android:id="@+id/bus_station_item_info_2"
+                    android:layout_columnWeight="15"
+                    android:textSize="12dp"
+                    android:textColor="@color/textContent"
+                    android:layout_gravity="fill"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
+                    android:layout_height="wrap_content"/>
                 <TextView
-                    android:id="@+id/plainNo"
-                    android:textColor="@android:color/black"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-        </LinearLayout>
+                    android:id="@+id/bus_station_item_plain_no"
+                    android:layout_columnWeight="1"
+                    android:textAlignment="center"
+                    android:textSize="12dp"
+                    android:textColor="@color/textTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+        </GridLayout>
 
 </LinearLayout>

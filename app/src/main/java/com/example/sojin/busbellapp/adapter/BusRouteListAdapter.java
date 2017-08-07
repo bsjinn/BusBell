@@ -43,13 +43,15 @@ public class BusRouteListAdapter extends BaseAdapter {
             convertView = inflater.inflate(R.layout.bus_route_info_item, parent, false);
         }
 
-        TextView busRouteNm = (TextView)convertView.findViewById(R.id.busRouteNm);
-        TextView busEtcInfo = (TextView)convertView.findViewById(R.id.busEtcInfo);
+        TextView busRouteNm = (TextView)convertView.findViewById(R.id.bus_route_item_route_nm);
+        TextView busCorpNm = (TextView)convertView.findViewById(R.id.bus_route_item_corp_nm);
+        TextView stationNm = (TextView)convertView.findViewById(R.id.bus_route_item_station_nm);
 
         BusRouteInfoItem item = busRouteInfoList.get(position);
 
         busRouteNm.setText(item.getBusRouteNm());
-        busEtcInfo.setText(item.getFirstBusTm() + " ~ " + item.getLastBusTm());
+        busCorpNm.setText("운수사명 : " + item.getCorpNm());
+        stationNm.setText("노선정보 : " + item.getStStationNm() + " ~ " + item.getEdStationNm());
 
         return convertView;
     }

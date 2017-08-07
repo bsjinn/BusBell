@@ -4,14 +4,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/busRouteNm"
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/busEtcInfo"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        <TableRow>
+            <TextView
+                android:id="@+id/bus_route_item_route_nm"
+                android:textColor="@color/textTitle"
+                android:textSize="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </TableRow>
+        <TableRow>
+            <TextView
+                android:id="@+id/bus_route_item_corp_nm"
+                android:textColor="@color/textContent"
+                android:textSize="12dp"
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+            <TextView
+                android:id="@+id/bus_route_item_station_nm"
+                android:textColor="@color/textContent"
+                android:textSize="12dp"
+                android:layout_weight="3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </TableRow>
+    </TableLayout>
 
 </LinearLayout>

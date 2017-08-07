@@ -145,7 +145,9 @@ public class FavoriteAddFragment extends Fragment {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Favorite item = new Favorite(0, editText.getText().toString()
+                favorite_title = editText.getText().toString();
+
+                Favorite item = new Favorite(0, favorite_title
                         , depart_station_id, depart_station_nm, depart_station_seq
                         , arrive_pre_station_id, arrive_station_id, arrive_station_nm
                         , routeId, routeNm);

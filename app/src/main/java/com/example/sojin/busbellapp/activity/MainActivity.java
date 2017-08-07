@@ -11,8 +11,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.example.sojin.busbellapp.fragment.FavoriteFragment;
 import com.example.sojin.busbellapp.R;
+import com.example.sojin.busbellapp.fragment.FavoriteFragment;
 import com.example.sojin.busbellapp.fragment.SearchFragment;
 import com.google.firebase.messaging.FirebaseMessaging;
 
@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     Button okButton;
     ListView listView;
 
+    FragmentTransaction fragmentTransaction;
     Fragment fragment = null;
 
     @Override
@@ -39,6 +40,11 @@ public class MainActivity extends AppCompatActivity {
         FirebaseMessaging.getInstance().subscribeToTopic("news");
         //String deviceToken=FirebaseInstanceId.getInstance().getToken();
         //Log.d("","token:"+deviceToken);
+
+        fragmentTransaction = getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.activity_main_frame_layout, new FavoriteFragment());
+        fragmentTransaction.commit();
 
         BottomNavigationView navigation = (BottomNavigationView)findViewById(R.id.activity_main_navigation);
         navigation.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {

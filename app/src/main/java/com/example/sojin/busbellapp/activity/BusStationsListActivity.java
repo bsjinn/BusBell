@@ -103,7 +103,7 @@ public class BusStationsListActivity extends AppCompatActivity {
                                 arrive_info.setText(selected_cur_station.getStationNm());
 
                                 destStnID = selected_cur_station.getStation();
-                                preStnID = selected_prev_station.getSection();
+                                preStnID = selected_prev_station.getStation();
                             } else {
                                 BusApiService arr_service = BusApiService.retrofit.create(BusApiService.class);
                                 Call<BusArrInfoWrapper> arr_call = arr_service.getArrInfoByRoute(selected_cur_station.getBusRouteId()
@@ -181,7 +181,6 @@ public class BusStationsListActivity extends AppCompatActivity {
             }
         });
 
-        //TODO: Impletment onClickListner -> Make a POST REQUEST with arrving info
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -193,6 +192,7 @@ public class BusStationsListActivity extends AppCompatActivity {
                         if(response.isSuccessful()){
                             RequestItem result = response.body();
 
+                            /* DB */
                         }else {
 
                         }
