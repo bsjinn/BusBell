@@ -84,6 +84,7 @@ public class SearchFragment extends Fragment {
                     case "MainActivity":
                         Intent intent = new Intent(getActivity(), BusStationsListActivity.class);
                         intent.putExtra("routeId", item.getBusRouteId());
+                        intent.putExtra("routeNm", item.getBusRouteNm());
 
                         startActivity(intent);
 

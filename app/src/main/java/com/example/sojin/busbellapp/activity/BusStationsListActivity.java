@@ -1,6 +1,5 @@
 package com.example.sojin.busbellapp.activity;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -23,7 +23,6 @@ import com.example.sojin.busbellapp.adapter.BusStationsByRouteListAdapter;
 import com.example.sojin.busbellapp.item.BusArrInfoWrapper;
 import com.example.sojin.busbellapp.item.BusPosInfoItem;
 import com.example.sojin.busbellapp.item.BusPosInfoWrapper;
-import com.example.sojin.busbellapp.item.BusRouteInfoItem;
 import com.example.sojin.busbellapp.item.BusStationInfoItem;
 import com.example.sojin.busbellapp.item.BusStationInfoWrapper;
 import com.example.sojin.busbellapp.item.DeleteItem;
@@ -43,7 +42,6 @@ public class BusStationsListActivity extends AppCompatActivity {
     private TextView arrive_info;
     private TextView arrive_bus_info;
 
-    private String busName;
     private String busID;
     private String preStnID;
     private String destStnID;
@@ -61,6 +59,7 @@ public class BusStationsListActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this.getIntent());
 
+        final String ROUTE_NM = intent.getStringExtra("routeNm");
         String ROUTE_ID = intent.getStringExtra("routeId");
         final String API_KEY = getString(R.string.api_key);
 
@@ -197,22 +196,25 @@ public class BusStationsListActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if(mPref.getInt("reqID",0)>0) {
                     reservedErrorAlert(mPref.getInt("reqID",0));
                 }else {
-                    AlarmApiService service = AlarmApiService.retrofit.create(AlarmApiService.class);
-                    Call<RequestItem> call = service.request("my device_id", busID, preStnID, destStnID);
-                    call.enqueue(new Callback<RequestItem>() {
-                        @Override
-                        public void onResponse(Call<RequestItem> call, Response<RequestItem> response) {
-                            if (response.isSuccessful()) {
-                                RequestItem result = response.body();
-                                int reqId = result.getReqID();
+
+                TelephonyManager tm = (TelephonyManager)getSystemService(TELEPHONY_SERVICE);
+                AlarmApiService service = AlarmApiService.retrofit.create(AlarmApiService.class);
+                Call<RequestItem> call = service.request(tm.getDeviceId(), busID, preStnID, destStnID);
+                call.enqueue(new Callback<RequestItem>() {
+                    @Override
+                    public void onResponse(Call<RequestItem> call, Response<RequestItem> response) {
+                        if(response.isSuccessful()){
+                            RequestItem result = response.body();
+                            int reqId=result.getReqID();
 
                             /* DB */
                                 SharedPreferences.Editor editor = mPref.edit();
                                 editor.putInt("reqID", reqId);
-                                //editor.putString("busNum", busName);
+                                editor.putString("busNum", ROUTE_NM);
                                 editor.putString("deptStn", depart_info.getText().toString());
                                 editor.putString("arvStn", arrive_info.getText().toString());
                                 editor.commit();
