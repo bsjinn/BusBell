@@ -2,11 +2,13 @@ package com.example.sojin.busbellapp.fragment;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -121,8 +123,9 @@ public class FavoriteFragment extends Fragment {
                                     .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                         @Override
                                         public void onClick(DialogInterface dialogInterface, int i) {
+                                            TelephonyManager tm = (TelephonyManager)getContext().getSystemService(Context.TELEPHONY_SERVICE);
                                             AlarmApiService alarmApiService = AlarmApiService.retrofit.create(AlarmApiService.class);
-                                            Call<RequestItem> call = alarmApiService.request("my device_id", busID, preStnID, destStnID);
+                                            Call<RequestItem> call = alarmApiService.request(tm.getDeviceId(), busID, preStnID, destStnID);
                                             call.enqueue(new Callback<RequestItem>() {
                                                 @Override
                                                 public void onResponse(Call<RequestItem> call, Response<RequestItem> response) {
