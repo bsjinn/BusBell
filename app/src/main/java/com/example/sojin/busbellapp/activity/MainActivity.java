@@ -116,14 +116,14 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
 
-                    inLayout.removeView(v);
-
                     AlarmApiService service = AlarmApiService.retrofit.create(AlarmApiService.class);
                     Call<DeleteItem> call = service.delete(Integer.toString(reqId));
                     call.enqueue(new Callback<DeleteItem>() {
                         @Override
                         public void onResponse(Call<DeleteItem> call, Response<DeleteItem> response) {
                             if(response.isSuccessful()){
+
+                                inLayout.removeView(v);
 
                                 SharedPreferences.Editor editor = mPref.edit();
                                 editor.clear();
