@@ -27,6 +27,7 @@ import com.example.sojin.busbellapp.item.BusStationInfoItem;
 import com.example.sojin.busbellapp.item.BusStationInfoWrapper;
 import com.example.sojin.busbellapp.item.DeleteItem;
 import com.example.sojin.busbellapp.item.RequestItem;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 
@@ -197,8 +198,10 @@ public class BusStationsListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 TelephonyManager tm = (TelephonyManager)getSystemService(TELEPHONY_SERVICE);
+                String FCM_TOKEN = FirebaseInstanceId.getInstance().getToken();
+
                 AlarmApiService service = AlarmApiService.retrofit.create(AlarmApiService.class);
-                Call<RequestItem> call = service.request(tm.getDeviceId(), busID, preStnID, destStnID);
+                Call<RequestItem> call = service.request(FCM_TOKEN, busID, preStnID, destStnID);
                 call.enqueue(new Callback<RequestItem>() {
                     @Override
                     public void onResponse(Call<RequestItem> call, Response<RequestItem> response) {

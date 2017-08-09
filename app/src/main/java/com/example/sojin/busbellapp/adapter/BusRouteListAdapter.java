@@ -48,9 +48,13 @@ public class BusRouteListAdapter extends BaseAdapter {
         TextView stationNm = (TextView)convertView.findViewById(R.id.bus_route_item_station_nm);
 
         BusRouteInfoItem item = busRouteInfoList.get(position);
+        String corpNm = item.getCorpNm();
+        int idx = corpNm.indexOf(" ");
+
+        corpNm = corpNm.substring(0,idx);
 
         busRouteNm.setText(item.getBusRouteNm());
-        busCorpNm.setText("운수사명 : " + item.getCorpNm());
+        busCorpNm.setText("운수사명 : " + corpNm);
         stationNm.setText("노선정보 : " + item.getStStationNm() + " ~ " + item.getEdStationNm());
 
         return convertView;

@@ -1,10 +1,8 @@
 package com.example.sojin.busbellapp.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -15,10 +13,8 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.sojin.busbellapp.AlarmApiService;
@@ -26,6 +22,7 @@ import com.example.sojin.busbellapp.R;
 import com.example.sojin.busbellapp.fragment.FavoriteFragment;
 import com.example.sojin.busbellapp.fragment.SearchFragment;
 import com.example.sojin.busbellapp.item.DeleteItem;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import retrofit2.Call;
@@ -33,9 +30,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
-    EditText editText;
-    Button okButton;
-    ListView listView;
 
     FragmentTransaction fragmentTransaction;
     Fragment fragment = null;
@@ -51,8 +45,8 @@ public class MainActivity extends AppCompatActivity {
         //setCustomActionBar();
         //fcm
         FirebaseMessaging.getInstance().subscribeToTopic("news");
-        //String deviceToken=FirebaseInstanceId.getInstance().getToken();
-        //Log.d("","token:"+deviceToken);
+        String deviceToken= FirebaseInstanceId.getInstance().getToken();
+
 
         //예약 내역 있을때 reserved window 노출
         mPref = getSharedPreferences("pref",MODE_PRIVATE);
