@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ android:layout_width="match_parent" android:layout_height="70dp"
+    android:background="#dcdad9"
+    android:orientation="horizontal"
+    >
+
+    <RelativeLayout
+        android:layout_weight="3"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:id="@+id/relativeLayout">
+
+        <TextView
+            android:id="@+id/text_reserved"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:text="예약중"
+            android:textColor="#f80000"
+            android:textSize="13sp" />
+
+        <ImageView
+            android:id="@+id/image_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignEnd="@+id/text_reserved"
+            android:layout_alignLeft="@+id/text_reserved"
+            android:layout_alignRight="@+id/text_reserved"
+            android:layout_alignStart="@+id/text_reserved"
+            android:layout_below="@+id/text_reserved"
+            android:layout_margin="5dp"/>
+
+    </RelativeLayout>
+    <TextView
+        android:id="@+id/bus_num"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="3"
+        android:text="노선"
+        android:textColor="#000000"
+        android:layout_gravity="center"
+        android:gravity="center"
+        />
+    <LinearLayout
+        android:id="@+id/fromto"
+        android:layout_weight="2"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:orientation="vertical"
+        android:layout_toRightOf="@id/relativeLayout">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="출발역"
+            android:textColor="#6f6f6f"
+            android:textSize="10sp"
+            android:id="@+id/from"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="도착역"
+        android:id="@+id/to"
+        android:textColor="#6f6f6f"
+        android:textSize="10sp"
+        />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
+        android:layout_toRightOf="@id/fromto"
+        android:layout_toLeftOf="@+id/cancel_btn"
+        android:layout_weight="10">
+        <TextView
+            android:id="@+id/station_from"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textColor="#000000"
+            android:textSize="13sp"/>
+        <TextView
+            android:id="@+id/station_to"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:textSize="13sp"
+            android:textColor="#000000"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/cancel_btn"
+        android:layout_weight="4"
+        android:layout_width="0dp"
+        android:layout_height="30dp"
+        android:layout_alignParentRight="true"
+        android:layout_margin="10dp"
+        android:layout_gravity="center"
+        android:background="#727272"
+        android:text="예약취소"
+        android:textSize="13sp"
+        android:textColor="#ffffff" />
+
+</LinearLayout>

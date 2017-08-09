@@ -1,9 +1,14 @@
 package com.example.sojin.busbellapp.activity;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -18,8 +23,10 @@ import com.example.sojin.busbellapp.adapter.BusStationsByRouteListAdapter;
 import com.example.sojin.busbellapp.item.BusArrInfoWrapper;
 import com.example.sojin.busbellapp.item.BusPosInfoItem;
 import com.example.sojin.busbellapp.item.BusPosInfoWrapper;
+import com.example.sojin.busbellapp.item.BusRouteInfoItem;
 import com.example.sojin.busbellapp.item.BusStationInfoItem;
 import com.example.sojin.busbellapp.item.BusStationInfoWrapper;
+import com.example.sojin.busbellapp.item.DeleteItem;
 import com.example.sojin.busbellapp.item.RequestItem;
 
 import java.util.ArrayList;
@@ -36,17 +43,21 @@ public class BusStationsListActivity extends AppCompatActivity {
     private TextView arrive_info;
     private TextView arrive_bus_info;
 
+    private String busName;
     private String busID;
     private String preStnID;
     private String destStnID;
 
     private ArrayList<BusPosInfoItem> busPos_ArrayList;
     private ArrayList<BusStationInfoItem> busStation_ArrayList;
+    SharedPreferences mPref;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_bus_stations_list);
+
+        mPref = getSharedPreferences("pref", MODE_PRIVATE);
 
         Intent intent = new Intent(this.getIntent());
 
@@ -193,8 +204,27 @@ public class BusStationsListActivity extends AppCompatActivity {
                     public void onResponse(Call<RequestItem> call, Response<RequestItem> response) {
                         if(response.isSuccessful()){
                             RequestItem result = response.body();
+                            int reqId=result.getReqID();
 
                             /* DB */
+                            if(mPref.getInt("reqID",0)>0) {
+                                reservedErrorAlert(reqId);
+                            }
+                            else{
+                                SharedPreferences.Editor editor = mPref.edit();
+                                editor.putInt("reqID", reqId);
+                                //editor.putString("busNum", busName);
+                                editor.putString("deptStn", depart_info.getText().toString());
+                                editor.putString("arvStn", arrive_info.getText().toString());
+                                editor.commit();
+
+                                Log.v("***save pref***","from::"+depart_info.getText().toString());
+
+                                Intent intent = new Intent(BusStationsListActivity.this,MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                startActivity(intent);
+                            }
+
                         }else {
 
                         }
@@ -207,6 +237,53 @@ public class BusStationsListActivity extends AppCompatActivity {
                 });
 
                 Toast.makeText(getApplicationContext(),"Making a Reservation is successed!",Toast.LENGTH_LONG).show();
+
+            }
+        });
+    }
+
+    public void reservedErrorAlert(final int reqId){
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        alertBuilder.setTitle("알림")
+                .setMessage("기존 예약 내역이 존재합니다.")
+                .setCancelable(false)
+                .setPositiveButton("예약 취소", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        requestDelete(reqId);
+                    }
+                }).setNegativeButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                return;
+            }
+        });
+
+        AlertDialog alertDialog = alertBuilder.create();
+        alertDialog.show();
+    }
+
+    public void requestDelete(int reqId){
+        AlarmApiService service = AlarmApiService.retrofit.create(AlarmApiService.class);
+        Call<DeleteItem> call = service.delete(Integer.toString(reqId));
+        call.enqueue(new Callback<DeleteItem>() {
+            @Override
+            public void onResponse(Call<DeleteItem> call, Response<DeleteItem> response) {
+                if(response.isSuccessful()){
+
+                    SharedPreferences.Editor editor = mPref.edit();
+                    editor.clear();
+                    editor.commit();
+
+                    Log.v("***DELETED***","shared preference data cleared");
+
+                }else {
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DeleteItem> call, Throwable t) {
+                t.printStackTrace();
             }
         });
     }
