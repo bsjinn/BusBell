@@ -1,6 +1,7 @@
 package com.example.sojin.busbellapp.activity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,9 +10,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -197,6 +200,11 @@ public class BusStationsListActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if(mPref.getInt("reqID",0)!=0) {
+                    reservedErrorAlert(mPref.getInt("reqID",0));
+                }else {
+
                 TelephonyManager tm = (TelephonyManager)getSystemService(TELEPHONY_SERVICE);
                 String FCM_TOKEN = FirebaseInstanceId.getInstance().getToken();
 
@@ -210,10 +218,6 @@ public class BusStationsListActivity extends AppCompatActivity {
                             int reqId=result.getReqID();
 
                             /* DB */
-                            if(mPref.getInt("reqID",0)>0) {
-                                reservedErrorAlert(reqId);
-                            }
-                            else{
                                 SharedPreferences.Editor editor = mPref.edit();
                                 editor.putInt("reqID", reqId);
                                 editor.putString("busNum", ROUTE_NM);
@@ -221,26 +225,23 @@ public class BusStationsListActivity extends AppCompatActivity {
                                 editor.putString("arvStn", arrive_info.getText().toString());
                                 editor.commit();
 
-                                Log.v("***save pref***","from::"+depart_info.getText().toString());
+                                Log.v("***save pref***", "from::" + depart_info.getText().toString());
 
-                                Intent intent = new Intent(BusStationsListActivity.this,MainActivity.class);
+                                Intent intent = new Intent(BusStationsListActivity.this, MainActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
+                            } else {
                             }
-
-                        }else {
-
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<RequestItem> call, Throwable t) {
-                        t.printStackTrace();
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<RequestItem> call, Throwable t) {
+                            t.printStackTrace();
+                        }
+                    });
 
-                Toast.makeText(getApplicationContext(),"Making a Reservation is successed!",Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(getApplicationContext(), "Making a Reservation is successed!", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
@@ -267,6 +268,8 @@ public class BusStationsListActivity extends AppCompatActivity {
     }
 
     public void requestDelete(int reqId){
+        final LinearLayout inLayout=(LinearLayout)findViewById(R.id.reserved_view);
+
         AlarmApiService service = AlarmApiService.retrofit.create(AlarmApiService.class);
         Call<DeleteItem> call = service.delete(Integer.toString(reqId));
         call.enqueue(new Callback<DeleteItem>() {
@@ -274,6 +277,7 @@ public class BusStationsListActivity extends AppCompatActivity {
             public void onResponse(Call<DeleteItem> call, Response<DeleteItem> response) {
                 if(response.isSuccessful()){
 
+                    Toast.makeText(getApplicationContext(), "예약 내역이 삭제되었습니다", Toast.LENGTH_LONG).show();
                     SharedPreferences.Editor editor = mPref.edit();
                     editor.clear();
                     editor.commit();
@@ -289,5 +293,15 @@ public class BusStationsListActivity extends AppCompatActivity {
                 t.printStackTrace();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Intent intent = new Intent(BusStationsListActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+
     }
 }
