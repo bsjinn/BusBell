@@ -22,7 +22,6 @@ import com.example.sojin.busbellapp.R;
 import com.example.sojin.busbellapp.fragment.FavoriteFragment;
 import com.example.sojin.busbellapp.fragment.SearchFragment;
 import com.example.sojin.busbellapp.item.DeleteItem;
-import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 import retrofit2.Call;
@@ -45,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         //setCustomActionBar();
         //fcm
         FirebaseMessaging.getInstance().subscribeToTopic("news");
-        String deviceToken= FirebaseInstanceId.getInstance().getToken();
+//        String deviceToken= FirebaseInstanceId.getInstance().getToken();
 
 
         //예약 내역 있을때 reserved window 노출

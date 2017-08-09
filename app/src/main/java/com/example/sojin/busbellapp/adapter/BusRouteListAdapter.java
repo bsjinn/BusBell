@@ -51,7 +51,8 @@ public class BusRouteListAdapter extends BaseAdapter {
         String corpNm = item.getCorpNm();
         int idx = corpNm.indexOf(" ");
 
-        corpNm = corpNm.substring(0,idx);
+        if(idx > 0)
+            corpNm = corpNm.substring(0,idx);
 
         busRouteNm.setText(item.getBusRouteNm());
         busCorpNm.setText("운수사명 : " + corpNm);

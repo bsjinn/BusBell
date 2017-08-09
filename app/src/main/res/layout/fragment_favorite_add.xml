@@ -26,7 +26,8 @@
 
             <EditText
                 android:id="@+id/fragment_favorite_add_title"
-                android:layout_width="wrap_content"
+                android:paddingLeft="10dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
             <TextView
@@ -36,6 +37,7 @@
 
             <TextView
                 android:id="@+id/fragment_favorite_add_on_station"
+                android:paddingLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
@@ -46,6 +48,7 @@
 
             <TextView
                 android:id="@+id/fragment_favorite_add_off_station"
+                android:paddingLeft="10dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
 
