@@ -1,6 +1,7 @@
 package com.example.sojin.busbellapp.activity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,9 +10,11 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -197,7 +200,7 @@ public class BusStationsListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(mPref.getInt("reqID",0)>0) {
+                if(mPref.getInt("reqID",0)!=0) {
                     reservedErrorAlert(mPref.getInt("reqID",0));
                 }else {
 
@@ -262,6 +265,8 @@ public class BusStationsListActivity extends AppCompatActivity {
     }
 
     public void requestDelete(int reqId){
+        final LinearLayout inLayout=(LinearLayout)findViewById(R.id.reserved_view);
+
         AlarmApiService service = AlarmApiService.retrofit.create(AlarmApiService.class);
         Call<DeleteItem> call = service.delete(Integer.toString(reqId));
         call.enqueue(new Callback<DeleteItem>() {
@@ -269,6 +274,7 @@ public class BusStationsListActivity extends AppCompatActivity {
             public void onResponse(Call<DeleteItem> call, Response<DeleteItem> response) {
                 if(response.isSuccessful()){
 
+                    Toast.makeText(getApplicationContext(), "예약 내역이 삭제되었습니다", Toast.LENGTH_LONG).show();
                     SharedPreferences.Editor editor = mPref.edit();
                     editor.clear();
                     editor.commit();
@@ -284,5 +290,15 @@ public class BusStationsListActivity extends AppCompatActivity {
                 t.printStackTrace();
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        Intent intent = new Intent(BusStationsListActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+
     }
 }
