@@ -8,8 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.example.sojin.busbellapp.BusApiService;
@@ -27,7 +27,7 @@ import retrofit2.Response;
 
 public class SearchFragment extends Fragment {
     private EditText editText;
-    private Button okButton;
+    private ImageButton okButton;
     private ListView listView;
 
     @Override
@@ -36,7 +36,7 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
 
         editText = (EditText) view.findViewById(R.id.fragment_search_edittext);
-        okButton = (Button) view.findViewById(R.id.fragment_search_button);
+        okButton = (ImageButton) view.findViewById(R.id.fragment_search_button);
         listView = (ListView) view.findViewById(R.id.fragment_search_listview);
 
         okButton.setOnClickListener(new View.OnClickListener() {
