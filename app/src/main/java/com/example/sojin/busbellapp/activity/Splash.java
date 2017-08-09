@@ -14,14 +14,13 @@ import com.example.sojin.busbellapp.R;
 public class Splash extends Activity {
 
     //로딩 화면 떠 있는 시간
-    private final int SPLASH_DISPLAY_LENGTH = 2000;
+    private final int SPLASH_DISPLAY_LENGTH = 1000;
 
     //처음 액티비티 생성 시 불러진다.
     @Override
     public void onCreate(Bundle icicle){
         super.onCreate(icicle);
         setContentView(R.layout.splah);
-
 
         //Splash 뒤에 MainActivity 실행시키고 종효
         new Handler().postDelayed(new Runnable(){
