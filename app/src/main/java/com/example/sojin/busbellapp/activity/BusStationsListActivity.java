@@ -197,20 +197,19 @@ public class BusStationsListActivity extends AppCompatActivity {
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                AlarmApiService service = AlarmApiService.retrofit.create(AlarmApiService.class);
-                Call<RequestItem> call = service.request("my device_id", busID, preStnID, destStnID);
-                call.enqueue(new Callback<RequestItem>() {
-                    @Override
-                    public void onResponse(Call<RequestItem> call, Response<RequestItem> response) {
-                        if(response.isSuccessful()){
-                            RequestItem result = response.body();
-                            int reqId=result.getReqID();
+                if(mPref.getInt("reqID",0)>0) {
+                    reservedErrorAlert(mPref.getInt("reqID",0));
+                }else {
+                    AlarmApiService service = AlarmApiService.retrofit.create(AlarmApiService.class);
+                    Call<RequestItem> call = service.request("my device_id", busID, preStnID, destStnID);
+                    call.enqueue(new Callback<RequestItem>() {
+                        @Override
+                        public void onResponse(Call<RequestItem> call, Response<RequestItem> response) {
+                            if (response.isSuccessful()) {
+                                RequestItem result = response.body();
+                                int reqId = result.getReqID();
 
                             /* DB */
-                            if(mPref.getInt("reqID",0)>0) {
-                                reservedErrorAlert(reqId);
-                            }
-                            else{
                                 SharedPreferences.Editor editor = mPref.edit();
                                 editor.putInt("reqID", reqId);
                                 //editor.putString("busNum", busName);
@@ -218,26 +217,23 @@ public class BusStationsListActivity extends AppCompatActivity {
                                 editor.putString("arvStn", arrive_info.getText().toString());
                                 editor.commit();
 
-                                Log.v("***save pref***","from::"+depart_info.getText().toString());
+                                Log.v("***save pref***", "from::" + depart_info.getText().toString());
 
-                                Intent intent = new Intent(BusStationsListActivity.this,MainActivity.class);
+                                Intent intent = new Intent(BusStationsListActivity.this, MainActivity.class);
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                 startActivity(intent);
+                            } else {
                             }
-
-                        }else {
-
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<RequestItem> call, Throwable t) {
-                        t.printStackTrace();
-                    }
-                });
+                        @Override
+                        public void onFailure(Call<RequestItem> call, Throwable t) {
+                            t.printStackTrace();
+                        }
+                    });
 
-                Toast.makeText(getApplicationContext(),"Making a Reservation is successed!",Toast.LENGTH_LONG).show();
-
+                    Toast.makeText(getApplicationContext(), "Making a Reservation is successed!", Toast.LENGTH_LONG).show();
+                }
             }
         });
     }
