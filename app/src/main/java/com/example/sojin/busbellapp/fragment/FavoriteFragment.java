@@ -5,10 +5,12 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +21,9 @@ import android.widget.Toast;
 import com.example.sojin.busbellapp.AlarmApiService;
 import com.example.sojin.busbellapp.BusApiService;
 import com.example.sojin.busbellapp.R;
+import com.example.sojin.busbellapp.activity.BusStationsListActivity;
 import com.example.sojin.busbellapp.activity.FavoriteAddActivity;
+import com.example.sojin.busbellapp.activity.MainActivity;
 import com.example.sojin.busbellapp.adapter.FavoriteListAdapter;
 import com.example.sojin.busbellapp.db.Favorite;
 import com.example.sojin.busbellapp.db.Migration;
@@ -36,16 +40,20 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static android.content.Context.MODE_PRIVATE;
+
 public class FavoriteFragment extends Fragment {
     private ArrayList<Favorite> favoriteList;
     private FavoriteListAdapter favoriteAdapter;
 
     private Realm realm;
     private String busID;
+    SharedPreferences mPref;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPref = ((MainActivity)getActivity()).getSharedPreferences("pref",MODE_PRIVATE);
 
         Realm.init(getContext());
         realm = Realm.getInstance(new RealmConfiguration.Builder()
@@ -131,8 +139,19 @@ public class FavoriteFragment extends Fragment {
                                                 public void onResponse(Call<RequestItem> call, Response<RequestItem> response) {
                                                     RequestItem result = response.body();
 
-                                                    if(result.getReqID() > 0)
-                                                        Toast.makeText(getContext(), "예약을 성공하였습니다.", Toast.LENGTH_SHORT).show();
+                                                    int reqId=result.getReqID();
+
+                            /* DB */
+
+                                                    SharedPreferences.Editor editor = mPref.edit();
+                                                    editor.putInt("reqID", reqId);
+                                                    editor.putString("busNum", item.getRoute_nm());
+                                                    editor.putString("deptStn", item.getDepart_station_nm());
+                                                    editor.putString("arvStn", item.getArrive_station_nm());
+                                                    editor.commit();
+
+                                                    ((MainActivity)getActivity()).setReservedWindow();
+                                                    Toast.makeText(getContext(), "예약을 성공하였습니다.", Toast.LENGTH_SHORT).show();
 
                                                     return;
                                                 }
