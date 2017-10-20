@@ -27,6 +27,8 @@ public class BusPosInfoItem {
     private String lastStnId;
     @Element(name = "nextStTm")
     private String nextStTm;
+    @Element(name = "nextStId")
+    private String nextStId;
     @Element(name = "plainNo")
     private String plainNo;
     @Element(name = "posX")
@@ -49,6 +51,8 @@ public class BusPosInfoItem {
     private String fullSectDist;
     @Element(name = "trnstnid")
     private String trnstnid;
+    @Element(name = "congetion")
+    private String congetion;
 
     public String getBusType() {
         return busType;
